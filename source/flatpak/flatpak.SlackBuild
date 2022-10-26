@@ -101,7 +101,6 @@ find -L . \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
 # Remember: we already have bubblewrap
-cat $CWD/5054.patch | patch -p1
 
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
