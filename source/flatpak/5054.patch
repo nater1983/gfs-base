@@ -1,0 +1,39 @@
+From bf2c4d06bbf8d194a013f9f116a3956aa3a65e3d Mon Sep 17 00:00:00 2001
+From: Patrick Griffis <pgriffis@igalia.com>
+Date: Tue, 23 Aug 2022 13:46:12 -0500
+Subject: [PATCH] flatpak.pc: Add httpbackend variable for curl/libsoup
+ detection
+
+Some projects such as GNOME-Software need this information to know
+if its safe to build against (libsoup2 vs libsoup3 conflicts).
+---
+ configure.ac  | 1 +
+ flatpak.pc.in | 3 +++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index 21ce326df6..c91dba7924 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -274,6 +274,7 @@ AS_IF([test x$with_curl != xno ], [
+ ])
+ AM_CONDITIONAL(USE_CURL, test x$with_curl != xno)
+ AM_CONDITIONAL(USE_SOUP, test x$with_curl == xno)
++AC_SUBST(http_backend)
+ 
+ LIBGPGME_DEPENDENCY="1.1.8"
+ PKG_CHECK_MODULES(DEP_GPGME, gpgme-pthread >= $LIBGPGME_DEPENDENCY, have_gpgme=yes, [
+diff --git a/flatpak.pc.in b/flatpak.pc.in
+index 457f4a056d..14cd1e0be0 100644
+--- a/flatpak.pc.in
++++ b/flatpak.pc.in
+@@ -7,6 +7,9 @@ datadir=@datadir@
+ 
+ interfaces_dir=${datadir}/dbus-1/interfaces/
+ 
++# This will either be 'soup' for libsoup-2.x or 'curl' for libcurl.
++httpbackend=@http_backend@
++
+ Name: flatpak
+ Description: Application sandboxing framework
+ Version: @VERSION@
