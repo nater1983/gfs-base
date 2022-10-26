@@ -165,11 +165,11 @@ cat $CWD/files/default.pa > $PKG/var/lib/gdm/.config/pulse/default.pa
 mkdir -p $PKG/usr/share/xsessions
 cp $CWD/sessions/*.desktop $PKG/usr/share/xsessions
 
-cd ..
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a AUTHORS COPYING HACKING MAINTAINERS NEWS README.md \
+cp -a \
+  AUTHORS COPYING HACKING MAINTAINERS NEWS README.md \
   $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
 cp $CWD/slack-desc $PKG/install
