@@ -66,10 +66,10 @@ DEPCHK=""
 
 if [ -z $VERSION ]
  then
- VERSION=1.14.0
+ VERSION=1.12.7
 fi
 
-MDSCHK=5e67b00ea06a45289718307d03a704a5
+MDSCHK=07d32580019572d5952cb0cadb073493
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://github.com/$PRGNAM/$PRGNAM/releases/download/$VERSION/$PRGNAM-$VERSION.tar.xz"}
 
