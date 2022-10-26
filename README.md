@@ -1,4 +1,4 @@
-# GFS Project - GNOME 40
+# GFS Project - GNOME 42
 ###### GNOME from Scratch/GNOME for Slackware
 
 ### Introduction
@@ -15,11 +15,11 @@
 ### Download and Install Compiled Packages
 1. Download using this command:
 ```bash
-lftp -c mirror "http://slackware.uk/gfs/gfs-40.2/pkg64" -c gfs-40.2-pkg64
+lftp -c mirror "http://slackware.uk/gfs/gfs-42.6/pkg64" -c gfs-42.6-pkg64
 ```
 2. As root, install:
 ```bash
-upgradepkg --install-new --reinstall gfs-40.2-pkg64/*.txz
+upgradepkg --install-new --reinstall gfs-42.6-pkg64/*.txz
 ```
 
 ### Configuring
@@ -64,7 +64,7 @@ fi
 7. Use `xwmconfig` to choose GNOME (or Flashback)
 8. Start using `startx`
 
-### How to compile and use GNOME 40
+### How to compile and use GNOME 42
  1. In console (root), type:
 ```bash
 git clone https://github.com/slackport/gfs
