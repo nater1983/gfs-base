@@ -36,3 +36,44 @@ if [ -x etc/rc.d/rc.messagebus ]; then
   chroot . /etc/rc.d/rc.messagebus reload
 fi
 
+## insertroleaccount accountname [uid] [gid]
+##   This routine will create a role account on the system with the uid (and
+##   optional gid) specified.  It will check to make sure that the id names
+##   are not duplicated but relies on useradd and groupadd to emit errors if
+##   the numeric ids would be non-unique.  Although they are optional, it is
+##   recommended that the uid and gid fields be specified since Slackware
+##   makes an assumption that role accounts will have ids below 100, and left
+##   unspecified useradd will pick a uid above 1000.
+##
+insertroleaccount ()
+{
+  local rolename=$1 uid=$2 gid=${3:-$2}
+  local tmp exists
+
+  while read ; do
+    tmp=`echo $REPLY | cut -d: -f1`
+    if [ "$tmp" = "$rolename" ]; then
+      exists='y'
+      break
+    fi
+  done < $ROOT/etc/group
+
+  if [ "$exists" != 'y' ]; then
+    chroot /$ROOT /usr/sbin/groupadd ${gid:+-g $gid} $rolename
+    exists='n'
+  fi
+
+  while read ; do
+    tmp=`echo $REPLY | cut -d: -f1`
+    if [ "$tmp" = "$rolename" ]; then
+      exists='y'
+      break
+    fi
+  done < $ROOT/etc/passwd
+
+  if [ "$exists" != 'y' ]; then
+    chroot /$ROOT /usr/sbin/useradd ${uid:+-u $uid} $rolename -g $rolename -s /bin/false -d / -c "$rolename role account"
+  fi
+}
+
+insertroleaccount avahi 85 85
