@@ -51,7 +51,7 @@ if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
   exit 0
 fi
 
-TMP=${TMP:-/tmp/SBo}
+TMP=${TMP:-/tmp/gfs}
 OUTPUT=${OUTPUT:-/tmp}
 PKG=$TMP/package-gtk4
 
