@@ -28,7 +28,7 @@ wget -c --no-check-certificate https://download.gnome.org/sources/gtk/4.8/gtk-4.
 PKGNAM=gtk4
 VERSION=${VERSION:-4.8.1}
 BUILD=${BUILD:-1}
-TAG=${TAG:-}
+TAG=${TAG:-_gfs}
 PKGTYPE=${PKGTYPE:-txz}
 
 NUMJOBS=${NUMJOBS:-" -j$(expr $(nproc) + 1) "}
@@ -160,7 +160,7 @@ find $PKG/usr/doc/gtk4-$VERSION/ -type f -exec chmod 644 {} \+
 chown -R root:root $PKG/usr/doc/gtk4-$VERSION
 
 mkdir -p $PKG/install 
-zcat $CWD/doinst.sh > $PKG/install/doinst.sh
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
