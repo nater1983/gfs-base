@@ -4,6 +4,7 @@
 #
 # Copyright 2016-2017 Willy Sudiarto Raharjo <willysr@slackbuilds.org>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Nathaniel Russell <naterussell83@gmail.com for gfs (2022)
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,9 +24,9 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://webkitgtk.org/releases/webkitgtk-2.33.2.tar.xz
+wget -c --no-check-certificate https://webkitgtk.org/releases/webkitgtk-2.36.8.tar.xz
 
-PRGNAM=webkit2gtk
+PRGNAM=webkit2gtk4.1
 SRCNAM=webkitgtk
 VERSION=${VERSION:-$(echo $SRCNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
@@ -83,23 +84,17 @@ cd build
 	-DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
 	-DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
 	-DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_SKIP_RPATH=ON \
+	-DCMAKE_SKIP_RPATH=ON \
 	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DLIB_INSTALL_DIR=/usr/lib${LIBDIRSUFFIX} \
+	-DLIBEXEC_INSTALL_DIR=/usr/lib${LIBDIRSUFFIX}/webkit2gtk-4.1 \
 	-DENABLE_GAMEPAD=OFF \
 	-DENABLE_MINIBROWSER=ON \
-	-DUSE_LIBNOTIFY=ON \
-	-DUSE_SYSTEMD=OFF \
-	-DENABLE_GTKDOC=ON \
-	-DENABLE_WEBGL=ON \
-	-DENABLE_WEBKIT=ON \
-	-DENABLE_TOOLS=ON \
-	-DENABLE_BUBBLEWRAP_SANDBOX=ON \
-        -DUSE_SOUP2=OFF \
-	-DUSE_GTK4=ON \
-        -DLIB_INSTALL_DIR=/usr/lib${LIBDIRSUFFIX} \
-	-DLIBEXEC_INSTALL_DIR=/usr/lib${LIBDIRSUFFIX}/webkit2gtk-4.0 \
-	-Wno-dev \
-	-G Ninja \
+	-DENABLE_JOURNALD_LOG=OFF \
+	-DENABLE_INTROSPECTION=ON \
+	-DENABLE_DOCUMENTATION=OFF \
+        -Wno-dev \
+        -G Ninja \
         ..
 
 ninja $JOBS || ninja
@@ -108,16 +103,17 @@ DESTDIR=$PKG ninja install
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
-cd ..
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a NEWS $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
-mkdir -p $PKG/usr/share/gtk-doc/html/webkit{2,dom}gtk-4.0
-install -m 0644 Documentation/webkit2gtk-4.0/html/* \
-  $PKG/usr/share/gtk-doc/html/webkit2gtk-4.0
-install -m 0644 Documentation/webkitdomgtk-4.0/html/* \
-  $PKG/usr/share/gtk-doc/html/webkitdomgtk-4.0
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a ../NEWS $PKG/usr/doc/$PRGNAM-$VERSION
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+
+mkdir -p $PKG/usr/share/gtk-doc/html/webkit2gtk-4.1
+mkdir -p $PKG/usr/share/gtk-doc/html/webkit2gtk-web-extension-4.1
+install -m 0644 ../Documentation/webkit2gtk-4.1/* \
+  $PKG/usr/share/gtk-doc/html/webkit2gtk-4.1
+install -m 0644 ../Documentation/webkit2gtk-web-extension-4.1/* \
+  $PKG/usr/share/gtk-doc/html/webkit2gtk-web-extension-4.1
 
 # Easy way to copy license and copying files by ArchLinux (ty so much)
 find Source -name 'COPYING*' -or -name 'LICENSE*' -print0 | sort -z |
