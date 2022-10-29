@@ -4,6 +4,7 @@
 
 # Copyright 2014-2021 Willy Sudiarto Raharjo <willysr@slackbuilds.org>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,7 +24,7 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://ftp.gnome.org/pub/GNOME/sources/yelp-tools/40/yelp-tools-40.0.tar.xz
+wget -c --no-check-certificate https://download.gnome.org/sources/yelp-tools/42/yelp-tools-42.0.tar.xz 
 
 PRGNAM=yelp-tools
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
