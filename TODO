@@ -120,7 +120,7 @@ gst-plugins-bad
 gtest
 gtk-frdp
 gtk-vnc
-gtk4
+gtk4									DONE
 gtksourceview4
 gtkspell3
 gupnp
