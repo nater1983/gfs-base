@@ -52,13 +52,13 @@ evolution-data-server
 exempi
 file-roller
 flake8
-flatpak
+flatpak									DONE
 flatpak-builder
 folks
 freerdp
 funcsigs
 gcab
-gdm
+gdm									Need to check file's I left the ones from GFS (Original) and updated Slackbuild
 gedit
 geoclue2
 geocode-glib
