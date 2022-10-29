@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Slackware build script for webkit2gtk
+# Slackware build script for webkit2gtk4.1
 #
 # Copyright 2016-2017 Willy Sudiarto Raharjo <willysr@slackbuilds.org>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
@@ -116,7 +116,7 @@ install -m 0644 ../Documentation/webkit2gtk-web-extension-4.1/* \
   $PKG/usr/share/gtk-doc/html/webkit2gtk-web-extension-4.1
 
 mkdir -p $PKG/install
-cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/slack-desc4.1 > $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
