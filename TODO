@@ -9,7 +9,7 @@ Vulkan-Tools
 acpica
 alabaster
 amtk
-apparmor
+apparmor								DONE
 appstream-glib
 argyllcms
 atomicwrites
