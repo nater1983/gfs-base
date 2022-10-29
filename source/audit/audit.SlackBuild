@@ -3,6 +3,7 @@
 # Copyright 2010,  R. Andrew Bailey, Chantilly, VA  USA
 #    2013 - 2014,  Bogdan Radulescu, Bucharest, Romania <bogdan@nimblex.net>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # All rights reserved.
 #
 #   Permission to use, copy, modify, and distribute this software for
@@ -23,7 +24,7 @@
 #   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 #   SUCH DAMAGE.
 
-wget -c --no-check-certificate http://people.redhat.com/sgrubb/audit/audit-3.0.1.tar.gz
+wget -c --no-check-certificate http://people.redhat.com/sgrubb/audit/audit-3.0.9.tar.gz
 
 PRGNAM=audit
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
@@ -70,8 +71,10 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
  -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+zcat $CWD/audit-3.0.8-linux-headers-5.17.patch.gz | patch -p1 || exit
+zcat $CWD/audit-3.0.8-musl-malloc.patch.gz | patch -p1 || exit
 # Init should check /etc/rc.d/rc.auditd.conf instead of /etc/sysconfig/auditd
-patch -p1 < $CWD/audit-2.3.6-sysconfig.diff
+zcat $CWD/audit-2.3.6-sysconfig.diff.gz | patch -p1 || exit
 
 CXXFLAGS="$SLKCFLAGS" \
 CFLAGS="$SLKCFLAGS" \
