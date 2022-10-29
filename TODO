@@ -281,7 +281,8 @@ usbredir
 valgrind
 vinagre
 vulkan-sdk-bin
-webkit2gtk
+webkit2gtk								DONE
+webkit2gtk4.1								DONE
 wheel
 wpebackend-fdo
 wxPython
