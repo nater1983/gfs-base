@@ -2,6 +2,7 @@
 
 ## Copyright (C) 2016 Ryan S. Northrup <northrup@yellowapple.us>
 ## Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+## Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 
 ## Permission is hereby granted, free of charge, to any person
 ## obtaining a copy of this software and associated documentation
@@ -62,7 +63,7 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=1.11.3
+ VERSION=1.14.1
 fi
 
 SRC_NAME_VERSION=elixir-${VERSION}
