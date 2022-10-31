@@ -1,7 +1,7 @@
 Automat									DONE Just Python3, Python 2.7 is no longer maintained.
 BeautifulSoup4								DONE
 ConfigParser								DONE ConfigParser2 backport for python2 and python3
-Jinja2
+Jinja2									DONE
 MarkupSafe
 Sphinx
 Vulkan-Headers								DONE
