@@ -20,6 +20,7 @@
 # 28 November 2016 to reflect the use of README.md instead
 # of README in upstream
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 
 PRGNAM=$(basename $0 | cut -f1 -d.)
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
@@ -64,17 +65,16 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=23.2
+ VERSION=25.1.2
 fi
 
 SRC_NAME_VERSION=otp_src_${VERSION}
 DOC_NAME_VERSION=otp_doc_man_${VERSION}
 
 MDSCHECK=(
-"http://www.erlang.org/download/otp_src_$VERSION.tar.gz e315f59eb9e420a0e469c09649f4303f"
-"http://www.erlang.org/download/otp_doc_man_$VERSION.tar.gz cfef029c3d4d6acf2cc04f8589002ecd"
+"https://github.com/erlang/otp/releases/download/OTP-$VERSION/otp_src_$VERSION.tar.gz d0e1076465023c194e456dce9e4106c5"
+"https://github.com/erlang/otp/releases/download/OTP-$VERSION/otp_doc_man_$VERSION.tar.gz c8245796410f5f9262f27480b5808fd2"
 )
-
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 
 for md5check in "${MDSCHECK[@]}"; do
@@ -136,8 +136,8 @@ chown -R root:root $PKG/usr/lib${LIBDIRSUFFIX}/erlang
 chmod -R u+w,go+r-w,a-s $PKG/usr/lib${LIBDIRSUFFIX}/erlang
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-( cd $PKG/usr/lib${LIBDIRSUFFIX}/erlang
-  mv COPYRIGHT README.md $PKG/usr/doc/$PRGNAM-$VERSION )
+DOCS="AUTHORS CONTRIBUTING.md LICENSE.txt OTP_VERSION README.md"
+cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION 
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mv $PKG/usr/lib${LIBDIRSUFFIX}/erlang/man $PKG/usr
