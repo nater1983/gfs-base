@@ -4,8 +4,8 @@ ConfigParser
 Jinja2
 MarkupSafe
 Sphinx
-Vulkan-Headers
-Vulkan-Tools
+Vulkan-Headers								DONE
+Vulkan-Tools								DONE
 acpica
 alabaster
 amtk
