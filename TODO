@@ -1,4 +1,4 @@
-Automat
+Automat									DONE Just Python3, Python 2.7 is no longer maintained.
 BeautifulSoup4
 ConfigParser
 Jinja2
@@ -235,7 +235,7 @@ python3-pylint
 python3-pytest
 python3-soupsieve
 python3-wrapt
-pytz
+pytz									Current already has it
 rabbitmq-c
 rabbitmq-server
 rest
@@ -248,14 +248,14 @@ simple-scan
 smartypants
 snappy
 snowballstemmer
-sphinx
+sphinx									Current already has it
 sphinx_rtd_theme
-sphinxcontrib-applehelp
-sphinxcontrib-devhelp
-sphinxcontrib-htmlhelp
-sphinxcontrib-jsmath
-sphinxcontrib-qthelp
-sphinxcontrib-serializinghtml
+sphinxcontrib-applehelp							Current already has it
+sphinxcontrib-devhelp							Current already has it
+sphinxcontrib-htmlhelp							Current already has it
+sphinxcontrib-jsmath							Current already has it
+sphinxcontrib-qthelp							Current already has it
+sphinxcontrib-serializinghtml						Current already has it
 spice
 spice-gtk
 spice-protocol
