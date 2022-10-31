@@ -6,7 +6,7 @@ MarkupSafe								Current already has it
 Sphinx									Current already has it ( python-sphinx )
 Vulkan-Headers								DONE
 Vulkan-Tools								DONE
-acpica
+acpica									DONE
 alabaster								Current already has it
 amtk
 apparmor								DONE
