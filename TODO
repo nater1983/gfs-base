@@ -7,7 +7,7 @@ Sphinx
 Vulkan-Headers								DONE
 Vulkan-Tools								DONE
 acpica
-alabaster
+alabaster								Current already has it
 amtk
 apparmor								DONE
 appstream-glib
