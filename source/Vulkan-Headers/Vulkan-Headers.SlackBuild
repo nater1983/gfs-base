@@ -4,6 +4,7 @@
 
 # Copyright 2020 Hunter Sezen California, USA
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,10 +24,10 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://github.com/KhronosGroup/Vulkan-Headers/archive/sdk-1.2.176.0/Vulkan-Headers-sdk-1.2.176.0.tar.gz
+wget -c --no-check-certificate https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v1.3.232.tar.gz 
 
 PRGNAM=Vulkan-Headers
-VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
+VERSION=${VERSION:-1.3.232}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
 
@@ -43,9 +44,9 @@ set -eu
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $PRGNAM-sdk-$VERSION
-tar xvf $CWD/$PRGNAM-sdk-$VERSION.tar.gz
-cd $PRGNAM-sdk-$VERSION
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/v$VERSION.tar.gz
+cd $PRGNAM-$VERSION
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -53,14 +54,12 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-# Require an older cmake version.
-sed -i 's/3.10.2/3.5.2/' CMakeLists.txt
-
 mkdir -p build
 cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release ..
+    -DCMAKE_BUILD_TYPE=Release \
+    -Wno-dev ..
   make $JOBS || make
   make install DESTDIR=$PKG
 cd ..
