@@ -5,6 +5,7 @@
 # Copyright 2014-2018 Dimitris Zlatanidis Orestiada, Greece
 # Copyright 2020-2021 Isaac Yu <isaacyu1@isaacyu1.com>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -24,7 +25,7 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://www.crummy.com/software/BeautifulSoup/bs4/download/4.9/beautifulsoup4-4.9.3.tar.gz
+wget -c --no-check-certificate https://files.pythonhosted.org/packages/e8/b0/cd2b968000577ec5ce6c741a54d846dfa402372369b8b6861720aa9ecea7/beautifulsoup4-4.11.1.tar.gz 
 
 PRGNAM=BeautifulSoup4
 SRCNAM=beautifulsoup4
@@ -107,7 +108,7 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a README.md COPYING.txt NEWS.txt TODO.txt doc/* $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a README.md COPYING.txt NEWS.txt doc/* $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
