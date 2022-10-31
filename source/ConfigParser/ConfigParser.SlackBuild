@@ -6,6 +6,7 @@
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
 # All rights reserved.
 #
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
 #
@@ -22,11 +23,11 @@
 #  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-wget -c --no-check-certificate https://pypi.python.org/packages/7c/69/c2ce7e91c89dc073eb1aa74c0621c3eefbffe8216b3f9af9d3885265c01c/configparser-3.5.0.tar.gz
+# 
+wget -c --no-check-certificate https://files.pythonhosted.org/packages/15/7d/23899ba6f88302c5619a2e81529c5944ccdf5becfe5b72bc6b97449cdf8b/configparser2-4.0.0.tar.gz 
 
 PRGNAM=ConfigParser
-SRCNAM=${PRGNAM,,}
+SRCNAM=configparser2
 VERSION=${VERSION:-$(echo $SRCNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
