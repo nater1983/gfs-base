@@ -2,8 +2,8 @@ Automat									DONE Just Python3, Python 2.7 is no longer maintained.
 BeautifulSoup4								DONE
 ConfigParser								DONE ConfigParser2 backport for python2 and python3
 Jinja2									DONE
-MarkupSafe
-Sphinx
+MarkupSafe								Current already has it
+Sphinx									Current already has it ( python-sphinx )
 Vulkan-Headers								DONE
 Vulkan-Tools								DONE
 acpica
@@ -25,7 +25,7 @@ bubblewrap
 cantarell-fonts								DONE
 ceph
 cheese
-chrome-gnome-shell								DONE
+chrome-gnome-shell							DONE
 clutter
 clutter-gst
 clutter-gtk
@@ -41,11 +41,11 @@ dbus-test-runner
 devhelp
 dog
 dpdk
-elixir
+elixir									DONE
 enchant2
 eog
 epiphany
-erlang-otp
+erlang-otp								DONE
 evince
 evolution
 evolution-data-server
@@ -236,8 +236,8 @@ python3-pytest
 python3-soupsieve
 python3-wrapt
 pytz									Current already has it
-rabbitmq-c
-rabbitmq-server
+rabbitmq-c								DONE
+rabbitmq-server								DONE
 rest
 retro-gtk
 rygel
@@ -248,7 +248,7 @@ simple-scan
 smartypants
 snappy
 snowballstemmer
-sphinx									Current already has it
+sphinx									DONE/ already up-to-date	
 sphinx_rtd_theme
 sphinxcontrib-applehelp							Current already has it
 sphinxcontrib-devhelp							Current already has it
