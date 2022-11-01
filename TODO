@@ -8,10 +8,10 @@ Vulkan-Headers								DONE
 Vulkan-Tools								DONE
 acpica									DONE
 alabaster								Current already has it
-amtk								DONE
+amtk									DONE
 apparmor								DONE
 appstream-glib								DONE
-argyllcms
+argyllcms								DONE
 atomicwrites
 audit									DONE
 augeas
@@ -21,7 +21,7 @@ babeltrace
 baobab									DONE
 blocaled								DONE
 brasero
-bubblewrap									DONE
+bubblewrap								DONE
 cantarell-fonts								DONE
 ceph
 cheese									DONE
@@ -131,7 +131,7 @@ html5lib
 hyperlink
 imagesize
 incremental
-jam
+jam									DONE
 jq
 jsonrpc-glib
 lcov
