@@ -68,7 +68,7 @@ if [ -z $VERSION ]
  VERSION=5.5.1
 fi
 
-MDSCHK=8ea25cde8b7bdbf98d7d6c939dea1724
+MDSCHK=da03bb2d83296b00aa7b8ee7adcfa1fe
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | cut -f1,2 -d.)/$PRGNAM-$VERSION.tar.xz"}
 
