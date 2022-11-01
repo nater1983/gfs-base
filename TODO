@@ -16,7 +16,7 @@ atomicwrites
 audit									DONE
 augeas
 autopep8
-avahi
+avahi									DONE
 babeltrace
 baobab
 blocaled								DONE
