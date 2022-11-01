@@ -4,6 +4,7 @@
 #
 # Copyright 2009  Erik W. Hanson, Minneapolis, MN, USA
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -69,6 +70,7 @@ rm -rf $PRGNAM-$VERSION
 mkdir -p $PRGNAM-$VERSION
 cd $PRGNAM-$VERSION
 unzip $CWD/$PRGNAM-$VERSION.zip
+zcat $CWD/am-2.5-overflow.patch.gz | patch -p1 || exit
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
