@@ -49,8 +49,8 @@ JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
 warn_accounts() {
   echo "  You must have an avahi user and group to run this script. "
   echo "  Something like this should suffice for most systems: "
-  echo "      # groupadd -g 214 avahi"
-  echo "      # useradd -u 214 -g 214 -c "Avahi" -d /dev/null -s /bin/false avahi"
+  echo "      # groupadd -g 85 avahi"
+  echo "      # useradd -u 85 -g 85 -c "Avahi" -d /dev/null -s /bin/false avahi"
  exit 1
 }
 
