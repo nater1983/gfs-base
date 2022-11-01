@@ -3,6 +3,7 @@
 # Slackware build script for amtk
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
+# Copyright 2022 Nathaniel Russell (naterussell83@gmail.com) Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -64,7 +65,7 @@ DEPCHK=""
 
 if [ -z $VERSION ]
  then
- VERSION=5.2.0
+ VERSION=5.5.1
 fi
 
 MDSCHK=8ea25cde8b7bdbf98d7d6c939dea1724
@@ -98,25 +99,22 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+cd build
 CFLAGS="$SLKCFLAGS" \
-CXXFLAGS="$SLKCFLAGS" \
-./configure \
- --prefix=/usr \
- --libdir=/usr/lib${LIBDIRSUFFIX} \
- --libexecdir=/usr/libexec \
- --sysconfdir=/etc \
- --infodir=/usr/info \
- --mandir=/usr/man \
- --localstatedir=/var \
- --disable-static \
- --enable-shared=yes \
- --enable-compile-warnings=no \
- --enable-installed-tests=no \
- --enable-introspection=yes \
- --build=$ARCH-slackware-linux
+  CXXFLAGS="$SLKCFLAGS" \
+  meson .. \
+    --buildtype=release \
+    --infodir=/usr/info \
+    --libdir=/usr/lib${LIBDIRSUFFIX} \
+    --localstatedir=/var \
+    --mandir=/usr/man \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    -Dstrip=true  
 
-make $JOBS || make
-make DESTDIR=$PKG install
+"${NINJA:=ninja}"
+  DESTDIR=$PKG $NINJA install
+cd ..
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
@@ -124,25 +122,12 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
 find $PKG -name '*.la' -delete
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a ABOUT-NLS AUTHORS COPYING ChangeLog HACKING INSTALL NEWS README \
-  $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
+cp -a NEWS README.md LICENSES/LGPL-3.0-or-later.txt \
+      $PKG/usr/doc/$PRGNAM-$VERSION
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: Amtk - Actions, Menus and Toolbars Kit for GTK applications
-$PRGNAM:
-$PRGNAM: Amtk is the acronym for “Actions, Menus and Toolbars Kit”. It is a
-$PRGNAM: basic GtkUIManager replacement based on GAction. It is suitable for
-$PRGNAM: both a traditional UI or a modern UI with a GtkHeaderBar.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://wiki.gnome.org/Projects/Amtk
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
