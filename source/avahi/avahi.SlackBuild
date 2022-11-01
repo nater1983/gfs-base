@@ -30,6 +30,7 @@ PRGNAM=avahi
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -44,14 +45,6 @@ TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/pkg-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
 JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
-
-# Support for mono
-if [ "${MONO:-no}" = "no" ]; then
-    MONO="--disable-mono"
-else
-    MONO="--enable-mono"
-fi
-MONO="--disable-mono" # mono support not working ATM
 
 warn_accounts() {
   echo "  You must have an avahi user and group to run this script. "
@@ -89,7 +82,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$PRGNAM-$VERSION.tar.gz
+tar xvf $CWD/$PRGNAM-$VERSION.tar.?z
 cd $PRGNAM-$VERSION
 chown -R root:root .
 find -L . \
@@ -98,18 +91,37 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
  -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-patch -p1 --verbose < $CWD/fixup_avahi-dnsconfd.action.patch
-patch -p1 --verbose < $CWD/ipv6_race_condition_fix.patch	# thanks, LFS
+
+# This patch is mine --rworkman
+patch -p1 --verbose < $CWD/patches/fixup_avahi-dnsconfd.action.patch
+
+# Thanks to LFS for this patch
+patch -p1 --verbose < $CWD/patches/ipv6_race_condition_fix.patch
+
+# Thanks to Debian for these patches
+patch -p1 --verbose < $CWD/patches/man-fix-reference-to-avahi-autoipd.action-8-in-avahi-auto.patch
+patch -p1 --verbose < $CWD/patches/man-add-missing-bshell.1-symlink.patch
+patch -p1 --verbose < $CWD/patches/Ship-avahi-discover-1-bssh-1-and-bvnc-1-also-for-GTK3.patch
+patch -p1 --verbose < $CWD/patches/avahi_dns_packet_consume_uint32-fix-potential-undefined-b.patch
+patch -p1 --verbose < $CWD/patches/fix-bytestring-decoding-for-proper-display.patch
+patch -p1 --verbose < $CWD/patches/avahi-discover-Don-t-decode-unicode-strings-only-bytestri.patch
+patch -p1 --verbose < $CWD/patches/Fetch-build-db-from-upstream-git.patch
+patch -p1 --verbose < $CWD/patches/build-db-Use-the-same-database-format-that-the-C-code-exp.patch
+patch -p1 --verbose < $CWD/patches/avahi-daemon-chroot-fix-bogus-assignments-in-assertions.patch
+patch -p1 --verbose < $CWD/patches/avahi-client-fix-resource-leak.patch
+patch -p1 --verbose < $CWD/patches/avoid-infinite-loop-in-avahi-daemon-by-handling-hup-event-in-client-work.patch
+patch -p1 --verbose < $CWD/patches/CVE-2021-3502.patch
 
 # Okay, I had to cheat a bit on the manual pages; there's a commit
 # in git that will fix this, so I just built a git checkout, grabbed
 # the built manual pages, and we'll drop them into place so the build
 # will work for this released version...
-cat $CWD/build-db > service-type-database/build-db
-chmod 0755 service-type-database/build-db
 cat $CWD/bssh.1 > man/bssh.1
 cat $CWD/avahi-discover.1 > man/avahi-discover.1
 
+autoreconf -vif
+
+export PYTHON=python3
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 ./configure \
@@ -134,6 +146,7 @@ CXXFLAGS="$SLKCFLAGS" \
   --enable-qt5 \
   --disable-qt4 \
   --disable-qt3 \
+  --disable-mono \
   --enable-core-docs \
   --with-dbus-sys=/usr/share/dbus-1/system.d \
   --with-avahi-user=avahi \
@@ -142,11 +155,10 @@ CXXFLAGS="$SLKCFLAGS" \
   --with-distro=slackware \
   --program-prefix= \
   --program-suffix= \
-  --build=$ARCH-slackware-linux \
-  $MONO
+  --build=$ARCH-slackware-linux 
 
-make $JOBS || make
-make install DESTDIR=$PKG
+make
+make install-strip DESTDIR=$PKG
 
 find $PKG | xargs file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
@@ -160,7 +172,10 @@ mv $PKG/etc/rc.d/rc.avahidaemon $PKG/etc/rc.d/rc.avahidaemon.new
 mv $PKG/etc/rc.d/rc.avahidnsconfd $PKG/etc/rc.d/rc.avahidnsconfd.new
 mv $PKG/etc/avahi/avahi-daemon.conf $PKG/etc/avahi/avahi-daemon.conf.new
 
+sed -i "s|#!python3|#!/usr/bin/python3|g" $PKG/usr/bin/avahi-{discover,bookmarks}
+
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+rm -f docs/INSTALL
 cp -a LICENSE docs/* $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
@@ -169,4 +184,4 @@ cat $CWD/slack-desc > $PKG/install/slack-desc
 cat $CWD/doinst.sh  > $PKG/install/doinst.sh
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
