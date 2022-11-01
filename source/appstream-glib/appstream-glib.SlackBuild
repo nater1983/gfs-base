@@ -4,6 +4,7 @@
 
 # Copyright 2017-2021 Andrew Clemons, Wellington New Zealand
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Nathaniel Russell <naterussell83@gmail.com> for gfs (2022)
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -74,29 +75,27 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+
+mkdir -p build
+cd build
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-meson build \
- --buildtype=release \
- --prefix=/usr \
- --libdir=/usr/lib${LIBDIRSUFFIX} \
- --sysconfdir=/etc \
- --mandir=/usr/man \
- -Ddep11=true \
- -Dbuilder=true \
- -Drpm=true \
- -Dalpm=false \
- -Dfonts=true \
- -Dstemmer=true \
- -Dman=true \
- -Dgtk-doc=true \
- -Dintrospection=true
+meson \
+  --prefix=/usr \
+  --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --sysconfdir=/etc \
+  --mandir=/usr/man \
+  -Dgtk-doc=true \
+  -Dstemmer=false \
+  ..
 
 # not sure why this is necessary
 sed -i "/^ COMMAND = \\/usr\\/bin\\/g-ir-scanner/s/-lyaml//" build/build.ninja
 
-ninja $JOBS -C build || ninja -C build
-DESTDIR=$PKG ninja -C build install
+"${NINJA:=ninja}"
+$NINJA
+DESTDIR=$PKG $NINJA install
+cd ..
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
