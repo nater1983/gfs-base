@@ -12,7 +12,7 @@ amtk									DONE
 apparmor								DONE
 appstream-glib								DONE
 argyllcms								DONE
-atomicwrites
+atomicwrites								DONE
 audit									DONE
 augeas
 autopep8
