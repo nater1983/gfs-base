@@ -3,6 +3,7 @@
 # Slackware script for argyllcms
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # Based on Archlinux PKGBUILD Script (Thanks a lot!):
 # https://github.com/archlinux/svntogit-community/blob/packages/argyllcms/trunk/PKGBUILD
 # Based on Gentoo ebuild script (Thanks so much!):
