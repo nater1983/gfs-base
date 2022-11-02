@@ -92,6 +92,7 @@ cd build
     --prefix=/usr \
     --sysconfdir=/etc \
     -Dgtk2=true \
+    -Dvapi=true \
     -Dgtk4=true \
     -Dman=false
   "${NINJA:=ninja}"
