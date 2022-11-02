@@ -31,7 +31,7 @@ clutter-gst							DONE
 clutter-gtk									DONE
 cogl								DONE
 colord
-colord-gtk
+colord-gtk								DONE
 constantly
 cssselect
 cunit
