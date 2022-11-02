@@ -29,9 +29,9 @@ chrome-gnome-shell							DONE
 clutter								DONE
 clutter-gst							DONE
 clutter-gtk									DONE
-cogl
+cogl								DONE
 colord
-colord-gtk
+colord-gtk								DONE
 constantly
 cssselect
 cunit

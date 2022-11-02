@@ -5,6 +5,7 @@
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
 # Based on Gentoo ebuild script (Thanks so much!):
 # https://gitweb.gentoo.org/repo/gentoo.git/tree/media-libs/cogl/cogl-1.22.8.ebuild
+# Copyright 2022 Nathaniel Russell (naterussell83@gmail.com) Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -28,6 +29,7 @@ PRGNAM=$(basename $0 | cut -f1 -d.)
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -104,10 +106,6 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-# Do not build examples
-sed -e "s/^\(SUBDIRS +=.*\)examples\(.*\)$/\1\2/" \
- -i Makefile.am Makefile.in
-
 # For some reason the configure switch will not completely disable
 # tests being built
 sed -e "s/^\(SUBDIRS =.*\)test-fixtures\(.*\)$/\1\2/" \
@@ -115,7 +113,7 @@ sed -e "s/^\(SUBDIRS =.*\)test-fixtures\(.*\)$/\1\2/" \
  -e "s/^\(.*am__append.* \)tests\(.*\)$/\1\2/" \
  -i Makefile.am Makefile.in || false
 
-SLKCFLAGS="$SLKCFLAGS" \
+CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 ./configure \
  --prefix=/usr \
@@ -156,10 +154,11 @@ CXXFLAGS="$SLKCFLAGS" \
  --enable-xlib-egl-platform=yes \
  --enable-introspection=yes \
  --disable-static \
+ --disable-glibtest \
  --build=$ARCH-slackware-linux
 
-make $JOBS || make
-make install DESTDIR=$PKG
+make
+make install -j1 DESTDIR=$PKG
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
@@ -169,26 +168,12 @@ find $PKG -name '*.la' -delete
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a COPYING ChangeLog NEWS README* \
   $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: COGL
-$PRGNAM:
-$PRGNAM: COGL is a low level OpenGL abstraction library developed for (and
-$PRGNAM: part of) Clutter. It is used primarily by Clutter to provide a common
-$PRGNAM: rendering API that works transparently across OpenGL >=1.4, OpenGL ES
-$PRGNAM: 1.1 and OpenGL ES 2.0.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://developer.gnome.org/cogl/
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
 
 umask ${UMASKBKP}
-
