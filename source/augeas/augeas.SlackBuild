@@ -4,6 +4,7 @@
 
 # Copyright 2015 Nikos Giotis <nikos.giotis@gmail.com>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -69,12 +70,12 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=1.4.0
+ VERSION=1.13.0
 fi
 
-MDSCHK=a2536a9c3d744dc09d234228fe4b0c93
+MDSCHK=909b9934190f32ffcbc2c5a92efaf9d2
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"http://download.augeas.net/augeas-$VERSION.tar.gz"}
+SRCDOWN=${SRCDOWN:-"https://github.com/hercules-team/augeas/releases/download/release-$VERSION/augeas-$VERSION.tar.gz"}
 
 if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
 then
@@ -95,7 +96,7 @@ cd $TMP
 rm -rf $PRGNAM-$VERSION
 tar xvf $CWD/$PRGNAM-$VERSION.tar.gz
 cd $PRGNAM-$VERSION
-
+zcat $CWD/23f7b550.patch.gz | patch -p1 || exit
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -129,7 +130,7 @@ find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a AUTHORS COPYING ChangeLog HACKING INSTALL NEWS README \
+cp -a AUTHORS COPYING ChangeLog HACKING.md INSTALL NEWS README \
  $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
