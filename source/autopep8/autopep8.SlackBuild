@@ -4,6 +4,7 @@
 
 # Copyright 2014-2018  Dimitris Zlatanidis  Orestiada, Greece
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -68,12 +69,12 @@ DEPCHK="pycodestyle"
 
 if [ -z $VERSION ]
  then
- VERSION=1.4
+ VERSION=2.0.0
 fi
 
-MDSCHK=0cb541c5d62eb7cfda1102d62f07d6d5
+MDSCHK=97fe2ac0fe2ad4c59b15356d0ce5db9f
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://files.pythonhosted.org/packages/cf/30/9efc988f92f41e2ba51211e3d317ee82260d563ae84dceb53f7021a1bdfe/autopep8-$VERSION.tar.gz"}
+SRCDOWN=${SRCDOWN:-"https://files.pythonhosted.org/packages/ac/71/48b7fde78ef09f4636a9b81f926b879d0230f90768483c441f22059d2474/autopep8-2.0.0.tar.gz"}
 
 if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
 then
