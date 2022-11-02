@@ -27,7 +27,7 @@ ceph
 cheese									DONE
 chrome-gnome-shell							DONE
 clutter
-clutter-gst
+clutter-gst							DONE
 clutter-gtk
 cogl
 colord
