@@ -28,7 +28,7 @@ cheese									DONE
 chrome-gnome-shell							DONE
 clutter
 clutter-gst							DONE
-clutter-gtk
+clutter-gtk									DONE
 cogl
 colord
 colord-gtk
