@@ -26,9 +26,9 @@ cantarell-fonts								DONE
 ceph
 cheese									DONE
 chrome-gnome-shell							DONE
-clutter
-clutter-gst
-clutter-gtk
+clutter								DONE
+clutter-gst							DONE
+clutter-gtk									DONE
 cogl
 colord
 colord-gtk
@@ -44,7 +44,7 @@ dpdk
 elixir									DONE
 enchant2
 eog
-epiphany
+epiphany									DONE
 erlang-otp								DONE
 evince
 evolution
