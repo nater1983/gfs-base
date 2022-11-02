@@ -14,8 +14,8 @@ appstream-glib								DONE
 argyllcms								DONE
 atomicwrites								DONE
 audit									DONE
-augeas
-autopep8
+augeas									DONE
+autopep8								DONE
 avahi									DONE
 babeltrace
 baobab									DONE
@@ -26,10 +26,10 @@ cantarell-fonts								DONE
 ceph
 cheese									DONE
 chrome-gnome-shell							DONE
-clutter								DONE
-clutter-gst							DONE
-clutter-gtk									DONE
-cogl								DONE
+clutter									DONE
+clutter-gst								DONE
+clutter-gtk								DONE
+cogl									DONE
 colord									DONE
 colord-gtk								DONE
 constantly
@@ -44,7 +44,7 @@ dpdk
 elixir									DONE
 enchant2
 eog
-epiphany									DONE
+epiphany								DONE
 erlang-otp								DONE
 evince
 evolution
@@ -215,7 +215,7 @@ plymouth
 protobuf
 py
 pyatspi
-pycodestyle
+pycodestyle								DONE
 pyelftools
 pyflakes
 pytest-runner
