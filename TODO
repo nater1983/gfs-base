@@ -30,7 +30,7 @@ clutter								DONE
 clutter-gst							DONE
 clutter-gtk									DONE
 cogl								DONE
-colord
+colord									DONE
 colord-gtk								DONE
 constantly
 cssselect
@@ -80,7 +80,7 @@ gnome-clocks
 gnome-color-manager
 gnome-contacts
 gnome-control-center
-gnome-desktop
+gnome-desktop								DONE
 gnome-disk-utility
 gnome-flashback
 gnome-font-viewer

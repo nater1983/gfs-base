@@ -4,6 +4,7 @@
 
 # Copyright 2015 Willy Sudiarto Raharjo <willysr@slackbuilds.org>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Copyright 2022 Nathaniel Russell (naterussell83@gmail.com) Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,12 +24,13 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://www.freedesktop.org/software/colord/releases/colord-1.4.5.tar.xz
+wget -c --no-check-certificate https://www.freedesktop.org/software/colord/releases/colord-1.4.6.tar.xz
 
 PRGNAM=colord
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -93,10 +95,6 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-# Patches by Gentoo Linux - Thanks!!
-patch -Np1 -i $CWD/1.4.5-optional-introspection.patch
-patch -Np1 -i $CWD/1.4.5-tests-Don-t-use-exact-floating-point-comparisons.patch
-
 # Clean up about 100 warnings
 # From Linux From Scratch!
 mv po/fur.po po/ur.po
@@ -107,36 +105,29 @@ sed -i 's/fur/ur/' po/LINGUAS
 # https://github.com/hughsie/colord/issues/36
 sed -i "s|0.114|0.113|" meson.build
 
+
 mkdir -p build
 cd build
-meson .. \
- --prefix=/usr \
- --buildtype=release \
- --localstatedir=/var \
- --libdir=lib${LIBDIRSUFFIX} \
- --libexecdir=/usr/lib${LIBDIRSUFFIX}/colord \
- --mandir=/usr/man \
- -Ddefault_library=shared \
- -Ddaemon=true \
- -Dsession_example=false \
- -Dbash_completion=true \
- -Dudev_rules=true \
- -Dsystemd=false \
- -Dlibcolordcompat=true \
- -Dargyllcms_sensor=true \
- -Dreverse=false \
- -Dsane=true \
- -Dvapi=true \
- -Dprint_profiles=true \
- -Dtests=false \
- -Dintrospection=true \
- -Dinstalled_tests=false \
- -Ddaemon_user=colord \
- -Dman=false \
- -Ddocs=true
-
-ninja $JOBS || ninja
-DESTDIR=$PKG ninja install
+meson --prefix=/usr \
+      --buildtype=release \
+      --localstatedir=/var \
+      --libdir=lib${LIBDIRSUFFIX} \
+      --libexecdir=/usr/lib${LIBDIRSUFFIX}/colord \
+      --mandir=/usr/man \
+      -Dlibcolordcompat=true \
+      -Dsane=true \
+      -Dvapi=true \
+      -Dsystemd=false \
+      -Dargyllcms_sensor=false \
+      -Dprint_profiles=false \
+      -Dtests=false \
+      -Dbash_completion=${USE_BASH} \
+      -Ddaemon_user=colord \
+      -Dman=false \
+      ../
+"${NINJA:=ninja}"
+DESTDIR=$PKG $NINJA install
+cd ..
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
@@ -144,14 +135,13 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
 # Fix paths
 sed -i "s|/lib|/lib${LIBDIRSUFFIX}|g" $PKG/usr/lib${LIBDIRSUFFIX}/pkgconfig/colord.pc
 sed -i "s|/lib|/lib${LIBDIRSUFFIX}|g" $PKG/usr/lib${LIBDIRSUFFIX}/pkgconfig/colorhug.pc
-
 mv $PKG/usr/share/dbus-1/system.d/org.freedesktop.ColorManager.conf $PKG/usr/share/dbus-1/system.d/org.freedesktop.ColorManager.conf.new
 
-cd ..
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a AUTHORS *.md COMMITMENT COPYING* MAINTAINERS NEWS RELEASE \
  $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+
 find $PKG/usr/doc/$PRGNAM-$VERSION/ -type f -exec chmod 644 {} \;
 chown -R root:root $PKG/usr/doc/$PRGNAM-$VERSION
 
@@ -163,4 +153,4 @@ cat $CWD/slack-desc > $PKG/install/slack-desc
 cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
