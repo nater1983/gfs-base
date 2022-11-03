@@ -30,7 +30,7 @@ clutter								DONE
 clutter-gst							DONE
 clutter-gtk									DONE
 cogl								DONE
-colord
+colord									DONE
 colord-gtk								DONE
 constantly
 cssselect
