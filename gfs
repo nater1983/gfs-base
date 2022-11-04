@@ -152,8 +152,8 @@ cd pkg
 mkdir -p usr/sbin
 ln -s /opt/gfs/gfs usr/sbin/gfs
 mkdir -p install
-#            |-----handy-ruler------------------------------------------------------|
 cat <<EOT >install/slack-desc
+             |-----handy-ruler------------------------------------------------------|
 slackport-gfs:
 slackport-gfs: GNOME From Scratch (gfs) System Builder
 slackport-gfs:
