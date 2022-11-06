@@ -66,7 +66,7 @@ gfbgraph
 gi-docgen
 gitg									DONE
 glusterfs
-gnome-applets
+gnome-applets								DONE
 gnome-autoar
 gnome-backgrounds
 gnome-bluetooth
@@ -85,15 +85,15 @@ gnome-disk-utility
 gnome-flashback
 gnome-font-viewer
 gnome-games
-gnome-initial-setup
-gnome-maps
-gnome-menus
-gnome-music
-gnome-nettool
-gnome-online-accounts
-gnome-online-miners
-gnome-panel
-gnome-photos
+gnome-initial-setup							DONE
+gnome-maps								DONE
+gnome-menus								Up-To-Date
+gnome-music								DONE
+gnome-nettool								DONE
+gnome-online-accounts							DONE
+gnome-online-miners							Up-To-Date
+gnome-panel								DONE
+gnome-photos								DONE
 gnome-remote-desktop
 gnome-screenshot
 gnome-session
