@@ -65,10 +65,10 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=40.0
+ VERSION=42.0
 fi
 
-MDSCHK=22c5a55020e6b5d05fa93552f56db1c8
+MDSCHK=40f0afd967eb1788aab8c12c5b52fb13
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | cut -f1 -d.)/$PRGNAM-$VERSION.tar.xz"}
 
