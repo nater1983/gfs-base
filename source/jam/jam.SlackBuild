@@ -70,7 +70,7 @@ rm -rf $PRGNAM-$VERSION
 mkdir -p $PRGNAM-$VERSION
 cd $PRGNAM-$VERSION
 unzip $CWD/$PRGNAM-$VERSION.zip
-zcat $CWD/am-2.5-overflow.patch.gz | patch -p1 || exit
+zcat $CWD/jam-2.5-overflow.patch.gz | patch -p1 || exit
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
