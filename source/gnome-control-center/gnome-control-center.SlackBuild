@@ -4,7 +4,7 @@
 
 # Copyright 2016, 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
 # All rights reserved.
-#
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
 #
@@ -22,7 +22,7 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://download.gnome.org/sources/gnome-control-center/40/gnome-control-center-40.0.tar.xz
+wget -c --no-check-certificate https://download.gnome.org/sources/gnome-control-center/42/gnome-control-center-42.4.tar.xz 
 
 PRGNAM=gnome-control-center
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
@@ -65,7 +65,7 @@ cd $TMP
 rm -rf $PRGNAM-$VERSION
 tar xfv $CWD/$PRGNAM-$VERSION.tar.?z*
 cd $PRGNAM-$VERSION
-
+zcat $CWD/distro-logo.patch.gz | patch -p1 || exit
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -74,8 +74,8 @@ find -L . \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
 # libgnome-volume-control subproject can be builded with shared library and alsa.
-sed -i "s#'static=true',#'static=false','pkglibdir=/usr/lib${LIBDIRSUFFIX}',#" meson.build
-sed -i 's/alsa=false/alsa=true/' meson.build
+#sed -i "s#'static=true',#'static=false','pkglibdir=/usr/lib${LIBDIRSUFFIX}',#" meson.build
+#sed -i 's/alsa=false/alsa=true/' meson.build
 
 mkdir -p build
 cd build
@@ -91,8 +91,12 @@ meson .. \
  --infodir=/usr/info \
  --mandir=/usr/man \
  --localstatedir=/var \
+ -Ddistributor_logo=/usr/share/pixmaps/slackware_logo_med.png \
+ -Ddark_mode_distributor_logo=/usr/share/pixmaps/slackware_whitelogo_med.png \
+ -Dmalcontent=true \
  -Ddefault_library=shared \
  -Ddocumentation=true
+
 
 # -Dcheese=true \
 # -Dibus=true \
@@ -106,6 +110,9 @@ meson .. \
 
 ninja $JOBS || ninja
 DESTDIR=$PKG ninja install
+
+install -Dm 644 $CWD/slackware_logo_med.png -t $PKG/usr/share/pixmaps/
+install -Dm 644 $CWD/slackware_whitelogo_med.png -t $PKG/usr/share/pixmaps/
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
