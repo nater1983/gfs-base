@@ -79,12 +79,12 @@ gnome-characters
 gnome-clocks
 gnome-color-manager
 gnome-contacts
-gnome-control-center
+gnome-control-center							DONE
 gnome-desktop								DONE
-gnome-disk-utility
-gnome-flashback
-gnome-font-viewer
-gnome-games
+gnome-disk-utility							DONE
+gnome-flashback								DONE
+gnome-font-viewer							DONE
+gnome-games								Up-To-Date
 gnome-initial-setup							DONE
 gnome-maps								DONE
 gnome-menus								Up-To-Date
