@@ -6,8 +6,14 @@
 # customary to leave one space after the ':' except on otherwise blank lines.
 
               |-----handy-ruler------------------------------------------------------|
-cups-pk-helper: cups-pk-helper
+cups-pk-helper: cups-pk-helper (cups PolicyKit Helper)
 cups-pk-helper:
-cups-pk-helper: The cups-pk-helper package contains a PolicyKit helper used to
-cups-pk-helper: configure Cups with fine-grained privileges.
+cups-pk-helper: cups-pk-helper is a PolicyKit helper to configure cups with 
+cups-pk-helper: fine-grained privileges.  
+cups-pk-helper:
+cups-pk-helper:
+cups-pk-helper:
+cups-pk-helper:
+cups-pk-helper:
+cups-pk-helper: https://www.freedesktop.org/wiki/Software/cups-pk-helper/
 cups-pk-helper:
