@@ -4,6 +4,7 @@
 
 # Copyright (c) 2016-2018 Thomas Szteliga <ts@websafe.pl>, Opole, PL
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
@@ -65,12 +66,12 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=9.3
+ VERSION=10.3
 fi
 
-MDSCHK=2f7c47c4cdeb4b511b35934c4586da69
+MDSCHK=9c795c8479f244e81bca5b2499a480cc
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://download.gluster.org/pub/gluster/glusterfs/9/9.3/glusterfs-9.3.tar.gz"}
+SRCDOWN=${SRCDOWN:-"https://download.gluster.org/pub/gluster/glusterfs/10/10.3/glusterfs-10.3.tar.gz"}
 
 if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
 then
