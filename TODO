@@ -62,16 +62,16 @@ gdm									Need to check file's I left the ones from GFS (Original) and updated
 gedit
 geoclue2
 geocode-glib
-gfbgraph
-gi-docgen
+gfbgraph								DONE
+gi-docgen								DONE
 gitg									DONE
-glusterfs
+glusterfs								DONE	
 gnome-applets								DONE
-gnome-autoar
-gnome-backgrounds
-gnome-bluetooth
-gnome-boxes
-gnome-browser-connector
+gnome-autoar								Up-To-Date
+gnome-backgrounds							DONE
+gnome-bluetooth								DONE
+gnome-boxes								DONE
+gnome-browser-connector							DONE
 gnome-builder								DONE
 gnome-calculator							DONE
 gnome-calendar								DONE
