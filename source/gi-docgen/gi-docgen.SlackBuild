@@ -22,7 +22,7 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://files.pythonhosted.org/packages/32/46/74e2beac88cf36a134d5a9b6e981231e6552558c9fa59c6788532005a378/gi-docgen-2021.6.tar.gz
+wget -c --no-check-certificate https://gitlab.gnome.org/GNOME/gi-docgen/-/archive/2022.2/gi-docgen-2022.2.tar.gz 
 
 PRGNAM=gi-docgen
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
@@ -81,21 +81,21 @@ DESTDIR=$PKG ninja install
 
 cd ..
 
-# Install man pages on correct directory
-sed -i 's|share/man|man|' setup.py
-
 python3 setup.py build
 python3 setup.py install --root=$PKG --optimize=1 --skip-build
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
+mv $PKG/usr/share/man $PKG/usr/man || exit 1
+
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
 
+
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a *.md LICENSES MANIFEST.in PKG-INFO \
- $PKG/usr/doc/$PRGNAM-$VERSION
+DOCS="CONTRIBUTING.md MANIFEST.in README.md code-of-conduct.md LICENSES"
+cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
 mkdir -p $PKG/install
