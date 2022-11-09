@@ -4,7 +4,7 @@
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
 # All rights reserved.
-#
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
 #
@@ -22,7 +22,7 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://download-fallback.gnome.org/sources/gnome-calculator/40/gnome-calculator-40.1.tar.xz
+wget -c --no-check-certificate https://download.gnome.org/sources/gnome-calculator/42/gnome-calculator-42.2.tar.xz 
 
 PRGNAM=gnome-calculator
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
@@ -65,7 +65,7 @@ cd $TMP
 rm -rf $PRGNAM-$VERSION
 tar xfv $CWD/$PRGNAM-$VERSION.tar.?z*
 cd $PRGNAM-$VERSION
-
+zcat $CWD/fix.function-crash.patch.gz | patch -p1 || exit
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
