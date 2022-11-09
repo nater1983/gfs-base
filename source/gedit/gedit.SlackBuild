@@ -3,6 +3,7 @@
 # Slackware build script for gedit
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # Based on Gentoo ebuild script (Thanks!!):
 # https://gitweb.gentoo.org/repo/gentoo.git/tree/app-editors/gedit/gedit-40.1.ebuild
 # All rights reserved.
@@ -66,10 +67,10 @@ DEPCHK="tepl"
 
 if [ -z $VERSION ]
  then
- VERSION=40.1
+ VERSION=42.2
 fi
 
-MDSCHK=e5cacbf3918f74dd2964fa4e174c82f3
+MDSCHK=733fcdd4db8e344460995857381cfaac
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | rev | cut -f2,3 -d. | rev)/$PRGNAM-$VERSION.tar.xz"}
 
@@ -102,8 +103,8 @@ find -L . \
 
 # Patches to turn gspell and python optional
 # Thanks to Mart Raudsepp <leio@gentoo.org>
-patch -Np1 -i $CWD/3.38-make-gspell-optional.patch
-patch -Np1 -i $CWD/3.38-make-python-optional.patch
+#patch -Np1 -i $CWD/3.38-make-gspell-optional.patch
+#patch -Np1 -i $CWD/3.38-make-python-optional.patch
 
 mkdir -p build
 cd build
