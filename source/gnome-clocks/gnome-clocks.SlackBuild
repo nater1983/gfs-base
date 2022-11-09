@@ -4,7 +4,7 @@
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
 # All rights reserved.
-#
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
 #
@@ -65,10 +65,10 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=40.0
+ VERSION=42.0
 fi
 
-MDSCHK=15b7ff01d11448e206595f660aa49e74
+MDSCHK=aab676dbc83c6079ae4db69582b6d3c2
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | cut -f1 -d.)/$PRGNAM-$VERSION.tar.xz"}
 

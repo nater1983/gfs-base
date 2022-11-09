@@ -73,12 +73,12 @@ gnome-bluetooth
 gnome-boxes
 gnome-browser-connector
 gnome-builder								DONE
-gnome-calculator
-gnome-calendar
-gnome-characters
-gnome-clocks
-gnome-color-manager
-gnome-contacts
+gnome-calculator							DONE
+gnome-calendar								DONE
+gnome-characters							DONE
+gnome-clocks								DONE
+gnome-color-manager							Up-To-Date
+gnome-contacts								DONE
 gnome-control-center							DONE
 gnome-desktop								DONE
 gnome-disk-utility							DONE
