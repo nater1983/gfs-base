@@ -59,9 +59,9 @@ freerdp
 funcsigs
 gcab
 gdm									Need to check file's I left the ones from GFS (Original) and updated Slackbuild
-gedit
-geoclue2
-geocode-glib
+gedit									DONE
+geoclue2								DONE
+geocode-glib								DONE
 gfbgraph								DONE
 gi-docgen								DONE
 gitg									DONE
