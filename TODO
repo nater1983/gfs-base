@@ -288,6 +288,7 @@ wpebackend-fdo
 wxPython
 xdg-dbus-proxy
 xdg-desktop-portal
+xdg-desktop-portal-gnome								DONE
 xdg-desktop-portal-gtk								DONE
 xen
 xmlsec
