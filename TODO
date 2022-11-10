@@ -288,7 +288,7 @@ wpebackend-fdo
 wxPython
 xdg-dbus-proxy
 xdg-desktop-portal
-xdg-desktop-portal-gtk
+xdg-desktop-portal-gtk								DONE
 xen
 xmlsec
 yajl
