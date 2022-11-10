@@ -286,8 +286,8 @@ webkit2gtk4.1								DONE
 wheel
 wpebackend-fdo
 wxPython
-xdg-dbus-proxy
-xdg-desktop-portal
+xdg-dbus-proxy								Current already has it
+xdg-desktop-portal								Current already has it
 xdg-desktop-portal-gnome								DONE
 xdg-desktop-portal-gtk								DONE
 xen
