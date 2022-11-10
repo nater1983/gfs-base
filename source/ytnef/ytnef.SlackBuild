@@ -3,6 +3,7 @@
 # Slackware build script for ytnef
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
+# Copyright 2022 Nathaniel Russell <naterussell83@gmail.com> Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -26,6 +27,7 @@ PRGNAM=$(basename $0 | cut -f1 -d.)
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -64,10 +66,10 @@ DEPCHK=""
 
 if [ -z $VERSION ]
  then
- VERSION=1.9.3
+ VERSION=2.0
 fi
 
-MDSCHK=60b7c26daa19a1246d077560b6862150
+MDSCHK=63cc29205d086aa5ef4827e2e10784f1
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://github.com/Yeraze/$PRGNAM/archive/v$VERSION/$PRGNAM-$VERSION.tar.gz"}
 
@@ -97,54 +99,39 @@ find -L . \
   -o -perm 511 \) -exec chmod 755 {} \; -o \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
-
-libtoolize --install --copy --force
-autoreconf -vif
+./autogen.sh
 
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 ./configure \
- --prefix=/usr \
- --libdir=/usr/lib${LIBDIRSUFFIX} \
- --sysconfdir=/etc \
- --localstatedir=/var \
- --mandir=/usr/man \
- --disable-maintainer-mode \
- --disable-static \
- --enable-shared=yes \
- --build=$ARCH-slackware-linux
+  --prefix=/usr \
+  --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --mandir=/usr/man \
+  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --disable-static \
+  --build=$ARCH-slackware-linux
 
-make $JOBS || make
-DESTDIR=$PKG make install
+make
+make install DESTDIR=$PKG
+
+rm -f $PKG/{,usr/}lib${LIBDIRSUFFIX}/*.la
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
-find $PKG -name '*.la' -delete
-
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a COPYING ChangeLog \
+cp -a \
+  COPYING ChangeLog README.md \
   $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: ytnef
-$PRGNAM:
-$PRGNAM: Yeraze's TNEF Stream Reader - for winmail.dat files
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://github.com/Yeraze/ytnef
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
 
 umask ${UMASKBKP}
 
