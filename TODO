@@ -221,7 +221,7 @@ pyflakes
 pytest-runner
 python-m2r
 python-mccabe
-python-toml
+python-toml									Current already has it ( python-tomli )
 python-twisted
 python-webencodings
 python2-scandir
