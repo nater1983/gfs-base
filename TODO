@@ -221,7 +221,7 @@ pyflakes
 pytest-runner
 python-m2r
 python-mccabe
-python-toml
+python-toml									Current already has it ( python-tomli )
 python-twisted
 python-webencodings
 python2-scandir
@@ -284,7 +284,7 @@ vulkan-sdk-bin
 webkit2gtk								DONE
 webkit2gtk4.1								DONE
 wheel
-wpebackend-fdo
+wpebackend-fdo								DONE
 wxPython
 xdg-dbus-proxy								Current already has it
 xdg-desktop-portal								Current already has it
