@@ -3,6 +3,7 @@
 # Slackware build script for evince
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
+# Copyright 2022 Nathaniel Russell <naterussell83@gmail.com> Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -26,6 +27,7 @@ PRGNAM=$(basename $0 | cut -f1 -d.)
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -64,10 +66,10 @@ DEPCHK=""
 
 if [ -z $VERSION ]
  then
- VERSION=40.2
+ VERSION=42.3
 fi
 
-MDSCHK=7c22be5af9d4594a6356150a14b06d47
+MDSCHK=af79972007dc35ee6151aa2ceb0c50a3
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | cut -f1 -d.)/$PRGNAM-$VERSION.tar.xz"}
 
@@ -117,17 +119,15 @@ meson .. \
  -Dviewer=true \
  -Dpreviewer=true \
  -Dthumbnailer=true \
- -Dbrowser_plugin=true \
- -Dnautilus=true \
+ -Dnautilus=false \
  -Dcomics=enabled \
  -Ddjvu=enabled \
- -Ddvi=enabled \
  -Dpdf=enabled \
  -Dps=enabled \
  -Dtiff=enabled \
  -Dxps=enabled \
- -Dgtk_doc=true \
- -Duser_doc=true \
+ -Dgtk_doc=false \
+ -Duser_doc=false \
  -Dintrospection=true \
  -Ddbus=true \
  -Dkeyring=enabled \
@@ -135,66 +135,28 @@ meson .. \
  -Dthumbnail_cache=enabled \
  -Dmultimedia=enabled \
  -Dgspell=enabled \
- -Dt1lib=enabled \
  -Dsystemduserunitdir=no
-
-# -Dbrowser_plugin_dir
 
 ninja $JOBS || ninja
 DESTDIR=$PKG ninja install
-
+cd ..
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
 
-cd ..
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a AUTHORS COPYING ChangeLog.pre-git MAINTAINERS NEWS NOTES README.commits TODO *.md \
   $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: Evince
-$PRGNAM:
-$PRGNAM: Evince is a document viewer for multiple document formats. The goal
-$PRGNAM: of evince is to replace the multiple document viewers that exist on
-$PRGNAM: the GNOME Desktop with a single simple application.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://wiki.gnome.org/Apps/Evince
-$PRGNAM:
-EOT
-
-cat <<EOT >$PKG/install/doinst.sh
-if [ -x /usr/bin/update-mime-database ]; then
-  /usr/bin/update-mime-database /usr/share/mime &> /dev/null
-fi
-
-if [ -x /usr/bin/update-desktop-database ]; then
-  /usr/bin/update-desktop-database -q usr/share/applications >/dev/null 2>&1
-fi
-
-if [ -e usr/share/icons/hicolor/icon-theme.cache ]; then
-  if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    /usr/bin/gtk-update-icon-cache usr/share/icons/hicolor >/dev/null 2>&1
-  fi
-fi
-
-if [ -e usr/share/glib-2.0/schemas ]; then
-  if [ -x /usr/bin/glib-compile-schemas ]; then
-    /usr/bin/glib-compile-schemas usr/share/glib-2.0/schemas >/dev/null 2>&1
-  fi
-fi
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
 
 umask ${UMASKBKP}
 
