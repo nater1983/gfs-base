@@ -146,7 +146,12 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
 mkdir -p $PKG/var/lib/gdm $PKG/var/cache/gdm $PKG/var/log/gdm $PKG/run/gdm
 chown -R -v gdm:gdm $PKG/var/lib/gdm $PKG/var/cache/gdm $PKG/var/log/gdm $PKG/run/gdm
 
-mv $PKG/etc/gdm/custom.conf $PKG/etc/gdm/custom.conf.new
+# Install GDM wrapper script:
+mv $PKG/usr/sbin/{gdm,gdm-bin}
+cat $CWD/gdm.wrap > $PKG/usr/sbin/gdm
+
+# Handle /etc/gdm/custom.conf a little nicer:
+mv $PKG/etc/gdm/{custom.conf,custom.conf.new}
 
 # Dont config for .new
 mkdir -p $PKG/etc/pam.d
