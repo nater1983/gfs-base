@@ -65,7 +65,7 @@ set -e
 UMASKBKP=$(umask)
 umask 0022
 
-DEPCHK=""
+DEPCHK="gtk3,gjs,libgweather,geoclue2,gnome-desktop,libhandy"
 OPTDEP=""
 
 if [ -z $VERSION ]
