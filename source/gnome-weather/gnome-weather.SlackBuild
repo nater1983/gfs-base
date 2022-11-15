@@ -3,6 +3,7 @@
 # Slackware build script for gnome-weather
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
+# Modifications Copyright 2022 by Jay Lanagan (j@lngn.net) for the GFS Project.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -26,6 +27,7 @@ PRGNAM=$(basename $0 | cut -f1 -d.)
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -39,7 +41,7 @@ CWD=$(pwd)
 TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/pkg-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
-JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
+JOBS=${JOBS:-" -j$(expr $(nproc) + 1) "}
 
 if [ "$ARCH" = "i486" ]; then
   SLKCFLAGS="-O2 -march=i486 -mtune=i686"
@@ -48,6 +50,9 @@ elif [ "$ARCH" = "i686" ]; then
   SLKCFLAGS="-O2 -march=i686 -mtune=i686"
   LIBDIRSUFFIX=""
 elif [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+  LIBDIRSUFFIX="64"
+elif [ "$ARCH" = "aarch64" ]; then
   SLKCFLAGS="-O2 -fPIC"
   LIBDIRSUFFIX="64"
 else
@@ -65,10 +70,10 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=40.0
+ VERSION=42.0
 fi
 
-MDSCHK=a172aa420065fd58d376429d2e80f603
+MDSCHK=702c07e0da5db7a3f779d74a55606fcb
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | cut -f1 -d.)/$PRGNAM-$VERSION.tar.xz"}
 
@@ -104,7 +109,7 @@ cd build
 
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-meson .. \
+meson setup .. \
  --prefix=/usr \
  --buildtype=release \
  --libdir=lib${LIBDIRSUFFIX} \
@@ -114,8 +119,7 @@ meson .. \
  --mandir=/usr/man \
  --localstatedir=/var \
  -Ddefault_library=shared \
- -Dprofile=default \
- -Ddogtail=true
+ -Dprofile=default
 
 ninja $JOBS || ninja
 DESTDIR=$PKG ninja install
@@ -130,22 +134,23 @@ cp -a COPYING.md NEWS README.md \
 cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
+
+#            |-----handy-ruler------------------------------------------------------|
 cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: GNOME Weather
+$PRGNAM: GNOME Weather (GNOME weather widget)
 $PRGNAM:
 $PRGNAM: GNOME Weather is a small application that allows you to monitor the
 $PRGNAM: current weather conditions for your city, or anywhere in the world,
-$PRGNAM: and to access updated forecasts provided by various internet
+$PRGNAM: and to access up to date forecasts provided by various internet
 $PRGNAM: services.
 $PRGNAM:
+$PRGNAM: Homepage: https://wiki.gnome.org/Apps/Weather
 $PRGNAM:
-$PRGNAM: https://wiki.gnome.org/Apps/Weather
+$PRGNAM:
 $PRGNAM:
 EOT
 
-cat <<\EOT >$PKG/install/doinst.sh
+cat <<EOT >$PKG/install/doinst.sh
 if [ -x /usr/bin/update-mime-database ]; then
   /usr/bin/update-mime-database /usr/share/mime &> /dev/null
 fi
@@ -168,7 +173,7 @@ fi
 EOT
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
 
 umask ${UMASKBKP}
 
