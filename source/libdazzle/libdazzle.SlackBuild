@@ -3,6 +3,8 @@
 # Slackware build script for libdazzle
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
+# Modified 2022 Jay Lanagan (j@lngn.net), Detroit, MI, USA.
+# This SlackBuild is part of the GFS (GNOME for Slackware) project.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,12 +24,13 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://download.gnome.org/sources/libdazzle/3.40/libdazzle-3.40.0.tar.xz
+wget -c --no-check-certificate https://download.gnome.org/sources/libdazzle/3.44/libdazzle-3.44.0.tar.xz
 
 PRGNAM=libdazzle
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -50,6 +53,9 @@ elif [ "$ARCH" = "i686" ]; then
   SLKCFLAGS="-O2 -march=i686 -mtune=i686"
   LIBDIRSUFFIX=""
 elif [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+  LIBDIRSUFFIX="64"
+elif [ "$ARCH" = "aarch64" ]; then
   SLKCFLAGS="-O2 -fPIC"
   LIBDIRSUFFIX="64"
 else
@@ -78,7 +84,7 @@ cd build
 
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-meson .. \
+meson setup .. \
  --prefix=/usr \
  --buildtype=release \
  --libdir=lib${LIBDIRSUFFIX} \
@@ -87,13 +93,7 @@ meson .. \
  --mandir=/usr/man \
  --localstatedir=/var \
  -Ddefault_library=shared \
- -Denable_tracing=false \
- -Denable_profiling=false \
- -Denable_rdtscp=false \
- -Denable_tools=true \
- -Dwith_introspection=true \
- -Dwith_vapi=true \
- -Denable_gtk_doc=true \
+ -Denable_tools=false \
  -Denable_tests=false
 
 ninja $JOBS || ninja
@@ -104,7 +104,7 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
 
 cd ..
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a AUTHORS *.md COPYING NEWS \
+cp -a AUTHORS CONTRIBUTING.md COPYING NEWS README.md \
   $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
@@ -112,4 +112,4 @@ mkdir -p $PKG/install
 cp $CWD/slack-desc $PKG/install
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
