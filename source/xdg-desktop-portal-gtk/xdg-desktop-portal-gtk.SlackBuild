@@ -27,6 +27,7 @@ PRGNAM=$(basename $0 | cut -f1 -d.)
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
