@@ -68,10 +68,10 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=0.29.23
+ VERSION=0.29.32
 fi
 
-MDSCHK=8aa05a2a1ad246d8915d79224dcad309
+MDSCHK=4dbcb4d6681abe78dff1088ca76c6e5e
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://github.com/cython/$PRGNAM/archive/$VERSION/$PRGNAM-$VERSION.tar.gz"}
 
