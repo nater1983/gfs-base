@@ -157,7 +157,7 @@ mv $PKG/etc/gdm/{custom.conf,custom.conf.new}
 mkdir -p $PKG/etc/pam.d
 cp $CWD/pamd/gdm-password $PKG/etc/pam.d/gdm-password
 cp $CWD/pamd/gdm-autologin $PKG/etc/pam.d/gdm-autologin
-cp $CWD/pamdgdm-launch-environment $PKG/etc/pam.d/gdm-launch-environment
+cp $CWD/pamd/gdm-launch-environment $PKG/etc/pam.d/gdm-launch-environment
 
 mkdir -p $PKG/etc/X11/xinit
 cat $CWD/files/xinitrc.gnome > $PKG/etc/X11/xinit/xinitrc.gnome
