@@ -1,8 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 # Slackware build script for libchamplain
 
-# Copyright 2022 Ozan Türkyılmaz
+# Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
+# Modified 2022 Jay Lanagan (j@lngn.net), Detroit, MI, USA.
+# This SlackBuild is part of the GFS (GNOME for Slackware) project.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -24,31 +26,30 @@
 
 cd $(dirname $0) ; CWD=$(pwd)
 
+wget -c --no-check-certificate http://ftp.gnome.org/pub/GNOME/sources/libchamplain/0.12/libchamplain-0.12.20.tar.xz
+
 PRGNAM=libchamplain
-VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
+VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_gcs}
+TAG=${TAG:-_gfs}
 PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
-    i?86) ARCH=i586 ;;
+    i?86) ARCH=i486 ;;
     arm*) ARCH=arm ;;
        *) ARCH=$( uname -m ) ;;
   esac
 fi
 
-if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
-  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
-  exit 0
-fi
-
-TMP=${TMP:-/tmp/gcs}
+CWD=$(pwd)
+TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
+JOBS=${JOBS:-" -j$(expr $(nproc) + 1) "}
 
-if [ "$ARCH" = "i586" ]; then
-  SLKCFLAGS="-O2 -march=i586 -mtune=i686"
+if [ "$ARCH" = "i486" ]; then
+  SLKCFLAGS="-O2 -march=i486 -mtune=i686"
   LIBDIRSUFFIX=""
 elif [ "$ARCH" = "i686" ]; then
   SLKCFLAGS="-O2 -march=i686 -mtune=i686"
@@ -70,8 +71,9 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$PRGNAM-$VERSION.tar.xz
+tar xfv $CWD/$PRGNAM-$VERSION.tar.?z*
 cd $PRGNAM-$VERSION
+
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -79,43 +81,33 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-mkdir build
+mkdir -p build
 cd build
-  CFLAGS="$SLKCFLAGS" \
-  CXXFLAGS="$SLKCFLAGS" \
-  meson setup .. \
-    --buildtype=release \
-    --infodir=/usr/info \
-    --libdir=/usr/lib${LIBDIRSUFFIX} \
-    --localstatedir=/var \
-    --bindir=/usr/bin \
-    --sbindir=/usr/sbin \
-    --includedir=/usr/include \
-    --datadir=/usr/share \
-    --sysconfdir=/etc \
-    --mandir=/usr/man \
-    --prefix=/usr \
-    --sysconfdir=/etc \
-    --wrap-mode=nodownload \
-    -Dwidgetry=true \
-    -Dstrip=true
-  "${NINJA:=ninja}"
-  DESTDIR=$PKG $NINJA install
-cd ..
 
-rm -f $PKG/{,usr/}lib${LIBDIRSUFFIX}/*.la
+CFLAGS="$SLKCFLAGS" \
+CXXFLAGS="$SLKCFLAGS" \
+meson setup .. \
+ --prefix=/usr \
+ --libdir=/usr/lib${LIBDIRSUFFIX} \
+ --sysconfdir=/etc \
+ --localstatedir=/var \
+ --buildtype=release \
+ -Dgtk_doc=true
+
+ninja $JOBS || ninja
+DESTDIR=$PKG ninja install
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
+cd ..
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a \
-  AUTHORS COPYING NEWS README.md \
+cp -a AUTHORS COPYING NEWS README.md \
   $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
 mkdir -p $PKG/install
-cat $CWD/slack-desc > $PKG/install/slack-desc
+cp $CWD/slack-desc $PKG/install
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
