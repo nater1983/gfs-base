@@ -139,8 +139,8 @@ leveldb
 lgi
 libaccounts-glib
 libcacard
-libchamplain
-libcloudproviders
+libchamplain								DONE
+libcloudproviders							DONE
 libdaemon
 libdazzle
 libdmapsharing3
@@ -148,10 +148,10 @@ libgdata
 libgit2
 libgit2-glib
 libglib-testing
-libgnomekbd
+libgnomekbd								DONE
 libgrss
 libgusb
-libgweather
+libgweather									DONE
 libgxps
 libhandy
 libiptcdata
