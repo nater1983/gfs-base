@@ -140,7 +140,7 @@ lgi
 libaccounts-glib
 libcacard
 libchamplain
-libcloudproviders
+libcloudproviders							DONE
 libdaemon
 libdazzle
 libdmapsharing3
@@ -151,7 +151,7 @@ libglib-testing
 libgnomekbd
 libgrss
 libgusb
-libgweather
+libgweather									DONE
 libgxps
 libhandy
 libiptcdata
