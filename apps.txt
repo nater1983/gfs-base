@@ -5,10 +5,10 @@
 *gnome-disk-utility							DONE
 *gnome-font-viewer							DONE
 *gnome-games								DONE
-*gnome-initial-setup
-*gnome-maps
-*gnome-music
-*gnome-nettool
+*gnome-initial-setup							DONE
+*gnome-maps								DONE
+*gnome-music								DONE
+*gnome-nettool								DONE
 *gnome-online-accounts
 *gnome-panel
 *gnome-photos
