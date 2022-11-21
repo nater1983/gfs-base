@@ -6,9 +6,14 @@
 # customary to leave one space after the ':' except on otherwise blank lines.
 
              |-----handy-ruler------------------------------------------------------|
-gnome-nettool: GNOME Nettool
+gnome-nettool: gnome-nettool ( Graphical interface for various networking tools ) 
 gnome-nettool:
 gnome-nettool: GNOME Nettool is a set of front-ends to various networking
 gnome-nettool: command-line tools, like ping, netstat, ifconfig, whois,
 gnome-nettool: traceroute, finger.
+gnome-nettool:
+gnome-nettool:
+gnome-nettool:
+gnome-nettool: https://gitlab.gnome.org/GNOME/gnome-nettool
+gnome-nettool:
 gnome-nettool:

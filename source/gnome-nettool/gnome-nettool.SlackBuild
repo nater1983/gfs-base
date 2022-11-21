@@ -71,8 +71,7 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-patch -p1 -i $CWD/02_fix_ui.patch
-
+zcat $CWD/42.0-meson-drop-unused-positional-arguments.patch.gz | patch -p1 || exit
 libtoolize --install --copy --force
 autoreconf -vif
 
