@@ -37,7 +37,7 @@ fi
 
 CWD=$(pwd)
 TMP=${TMP:-/tmp/gfs}
-PKG=$TMP/pkg-$PRGNAM
+PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
 JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
 
@@ -138,42 +138,8 @@ cp -a AUTHORS COPYING CodingStyle.txt HACKING MAINTAINERS NEWS README* THANKS \
 cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: GNOME Boxes
-$PRGNAM:
-$PRGNAM: An application to view, access, and manage remote and virtual
-$PRGNAM: systems.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://wiki.gnome.org/Apps/Boxes
-$PRGNAM:
-EOT
-
-cat <<\EOT >$PKG/install/doinst.sh
-if [ -x /usr/bin/update-mime-database ]; then
-  /usr/bin/update-mime-database /usr/share/mime &> /dev/null
-fi
-
-if [ -x /usr/bin/update-desktop-database ]; then
-  /usr/bin/update-desktop-database -q usr/share/applications >/dev/null 2>&1
-fi
-
-if [ -e usr/share/icons/hicolor/icon-theme.cache ]; then
-  if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    /usr/bin/gtk-update-icon-cache usr/share/icons/hicolor >/dev/null 2>&1
-  fi
-fi
-
-if [ -e usr/share/glib-2.0/schemas ]; then
-  if [ -x /usr/bin/glib-compile-schemas ]; then
-    /usr/bin/glib-compile-schemas usr/share/glib-2.0/schemas >/dev/null 2>&1
-  fi
-fi
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
