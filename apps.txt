@@ -1,23 +1,10 @@
-*Sphinx
-*Vulkan-Tools
-*apparmor
-*brasero
-*cheese
-*chrome-gnome-shell
-*clutter-gtk
-*eog
-*epiphany
-*evince
-*evolution
-*evolution-data-server
-*file-roller
-*flatpak
-*gdm
-*gedit
-*gnome-control-center
-*gnome-disk-utility
-*gnome-font-viewer
-*gnome-games
+*gdm									DONE
+*gnome-boxes								DONE
+*gedit									DONE
+*gnome-control-center							DONE
+*gnome-disk-utility							DONE
+*gnome-font-viewer							DONE
+*gnome-games								DONE
 *gnome-initial-setup
 *gnome-maps
 *gnome-music
@@ -38,6 +25,28 @@
 *gnome-user-share
 *gnome-video-effects
 *gnome-weather
+*gnome-browser-connector
+*gnome-builder								DONE
+*gnome-calculator
+*gnome-calendar
+*gnome-characters
+*gnome-clocks
+*gnome-color-manager
+*gnome-contacts
+*Vulkan-Tools
+*Sphinx
+*apparmor
+*brasero
+*cheese
+*chrome-gnome-shell
+*clutter-gtk
+*eog									DONE
+*epiphany
+*evince
+*evolution
+*evolution-data-server
+*file-roller
+*flatpak
 *gsound
 *gtk-frdp
 *gtk-vnc
@@ -63,13 +72,3 @@
 *yelp-tools
 *zenity
 *valgrind
-*gnome-boxes
-*gnome-browser-connector
-*gnome-builder
-*gnome-calculator
-*gnome-calendar
-*gnome-characters
-*gnome-clocks
-*gnome-color-manager
-*gnome-contacts
-
