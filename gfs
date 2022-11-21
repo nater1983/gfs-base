@@ -257,6 +257,7 @@ sysprof
 libcloudproviders
 gtk4
 gtksourceview4
+gtksourceview5
 lua
 lua53
 luasocket
