@@ -198,7 +198,7 @@ more-itertools
 mutter								DONE
 mypy
 mypy_extensions
-nautilus
+nautilus								DONE
 netcf
 nspr
 numactl
