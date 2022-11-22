@@ -12,9 +12,9 @@
 *gnome-online-accounts							DONE
 *gnome-panel								DONE
 *gnome-photos								DONE
-*gnome-remote-desktop
-*gnome-screenshot
-*gnome-session
+*gnome-remote-desktop							DONE
+*gnome-screenshot							DONE
+*gnome-session								DONE
 *gnome-shell
 *gnome-shell-extensions
 *gnome-system-monitor
