@@ -20,16 +20,16 @@
 *gnome-system-monitor							DONE
 *gnome-terminal								DONE
 *gnome-tour								DONE
-*gnome-tweaks
-*gnome-user-docs
-*gnome-user-share
-*gnome-video-effects
-*gnome-weather
-*gnome-browser-connector
+*gnome-tweaks								DONE
+*gnome-user-docs							DONE
+*gnome-user-share							DONE
+*gnome-video-effects							DONE
+*gnome-weather								DONE
+*gnome-browser-connector						DONE
 *gnome-builder								DONE
-*gnome-calculator
-*gnome-calendar
-*gnome-characters
+*gnome-calculator							DONE
+*gnome-calendar								DONE
+*gnome-characters							DONE
 *gnome-clocks
 *gnome-color-manager
 *gnome-contacts
