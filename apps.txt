@@ -9,9 +9,9 @@
 *gnome-maps								DONE
 *gnome-music								DONE
 *gnome-nettool								DONE
-*gnome-online-accounts
-*gnome-panel
-*gnome-photos
+*gnome-online-accounts							DONE
+*gnome-panel								DONE
+*gnome-photos								DONE
 *gnome-remote-desktop
 *gnome-screenshot
 *gnome-session
@@ -52,7 +52,7 @@
 *gtk-vnc
 *metacity
 *mutter
-*nautilus
+*nautilus								DONE
 *orca
 *p7zip
 *pytz
