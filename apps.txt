@@ -15,11 +15,11 @@
 *gnome-remote-desktop							DONE
 *gnome-screenshot							DONE
 *gnome-session								DONE
-*gnome-shell
-*gnome-shell-extensions
-*gnome-system-monitor
-*gnome-terminal
-*gnome-tour
+*gnome-shell								DONE
+*gnome-shell-extensions							DONE
+*gnome-system-monitor							DONE
+*gnome-terminal								DONE
+*gnome-tour								DONE
 *gnome-tweaks
 *gnome-user-docs
 *gnome-user-share
