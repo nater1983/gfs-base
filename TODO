@@ -157,8 +157,8 @@ libgxps									DONE
 libhandy								DONE
 libiptcdata								DONE
 libiscsi								DONE
-libisoburn
-libisofs
+libisoburn								DONE
+libisofs								DONE
 libjte
 liblouis								DONE
 libmanette								DONE

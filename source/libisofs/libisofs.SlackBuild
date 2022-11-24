@@ -22,6 +22,8 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+wget -c --no-check-certificate https://files.libburnia-project.org/releases/libisofs-1.5.4.tar.gz
+
 PRGNAM=$(basename $0 | cut -f1 -d.)
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
@@ -37,9 +39,9 @@ fi
 
 CWD=$(pwd)
 TMP=${TMP:-/tmp/gfs}
-PKG=$TMP/pkg-$PRGNAM
+PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
-JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
+JOBS=${JOBS:-"-j$(expr $(nproc) + 1)"}
 
 if [ "$ARCH" = "i486" ]; then
   SLKCFLAGS="-O2 -march=i486 -mtune=i686"
@@ -48,6 +50,9 @@ elif [ "$ARCH" = "i686" ]; then
   SLKCFLAGS="-O2 -march=i686 -mtune=i686"
   LIBDIRSUFFIX=""
 elif [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+  LIBDIRSUFFIX="64"
+elif [ "$ARCH" = "aarch64" ]; then
   SLKCFLAGS="-O2 -fPIC"
   LIBDIRSUFFIX="64"
 else
@@ -59,31 +64,6 @@ set -e
 
 UMASKBKP=$(umask)
 umask 0022
-
-DEPCHK=""
-OPTDEP=""
-
-if [ -z $VERSION ]
- then
- VERSION=1.5.4
-fi
-
-MDSCHK=c34fbf182e79af8fdaddda5e27d326ba
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://files.libburnia-project.org/releases/$PRGNAM-$VERSION.tar.gz"}
-
-if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo $PRGNAM-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $PRGNAM-$VERSION.tar.?z*
-   $DWNLCMD $SRCDOWN
- fi
-fi
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -117,10 +97,6 @@ CXXFLAGS="$SLKCFLAGS" \
  --disable-static \
  --enable-debug=no \
  --enable-libdir-pkgconfig=yes \
- --enable-libacl=yes \
- --enable-xattr=yes \
- --enable-zlib=yes \
- --enable-libjte=yes \
  --build=$ARCH-slackware-linux
 
 make $JOBS || make
@@ -137,20 +113,7 @@ cp -a AUTHORS COPYING COPYRIGHT ChangeLog INSTALL NEWS README TODO \
 cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: libisofs
-$PRGNAM:
-$PRGNAM: libisofs is a library to create an ISO-9660 filesystem, supports
-$PRGNAM: extensions like RockRidge or Joliet, and introduces an own extension
-$PRGNAM: AAIP.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://dev.lovelyhq.com/libburnia/web/wikis/Libisofs
-$PRGNAM:
-EOT
+cp $CWD/slack-desc $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
