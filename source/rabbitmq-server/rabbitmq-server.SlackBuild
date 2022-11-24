@@ -164,46 +164,8 @@ done
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: rabbitmq-server (Open source multi-protocol messaging broker)
-$PRGNAM:
-$PRGNAM: RabbitMQ is a feature rich, multi-protocol messaging broker.
-$PRGNAM: It supports:
-$PRGNAM: AMQP 0-9-1
-$PRGNAM: STOMP 1.0 through 1.2
-$PRGNAM: MQTT 3.1.1
-$PRGNAM: AMQP 1.0
-$PRGNAM:
-$PRGNAM: Homepage: http://www.rabbitmq.com/
-EOT
-
-cat <<\EOT >$PKG/install/doinst.sh
-config() {
-  NEW="$1"
-  OLD="$(dirname $NEW)/$(basename $NEW .new)"
-  if [ ! -r $OLD ]; then
-    mv $NEW $OLD
-  elif [ "$(cat $OLD | md5sum)" = "$(cat $NEW | md5sum)" ]; then
-    rm $NEW
-  fi
-}
-
-preserve_perms() {
-  NEW="$1"
-  OLD="$(dirname $NEW)/$(basename $NEW .new)"
-  if [ -e $OLD ]; then
-    cp -a $OLD ${NEW}.incoming
-    cat $NEW > ${NEW}.incoming
-    mv ${NEW}.incoming $NEW
-  fi
-  config $NEW
-}
-
-preserve_perms etc/rc.d/rc.rabbitmq.new
-config etc/rabbitmq/rabbitmq-env.conf.new
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
