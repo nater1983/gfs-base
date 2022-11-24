@@ -153,7 +153,7 @@ libgnomekbd								DONE
 libgrss									DONE
 libgusb									DONE
 libgweather4								? DONE who marked as done? was broken, fixed and renamed -j
-libgxps
+libgxps									DONE
 libhandy
 libiptcdata
 libiscsi
