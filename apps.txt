@@ -1,6 +1,3 @@
-*flatpak
-*gsound
-*gtk-frdp
 *gtk-vnc
 *metacity
 *mutter	
