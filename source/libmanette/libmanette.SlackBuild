@@ -3,6 +3,7 @@
 # Slackware build script for libmanette
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
+# Copyright 2022 Nathaniel Russell <naterussell83@gmail.com> Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,27 +23,35 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
-VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
+wget -c --no-check-certificate https://download.gnome.org/sources/libmanette/0.2/libmanette-0.2.6.tar.xz
+
+
+cd $(dirname $0) ; CWD=$(pwd)
+
+PRGNAM=libmanette
+VERSION=${VERSION:-0.2.6}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
-    i?86) ARCH=i486 ;;
+    i?86) ARCH=i586 ;;
     arm*) ARCH=arm ;;
        *) ARCH=$( uname -m ) ;;
   esac
 fi
 
-TMP=${TMP:-/tmp/gfs}
-PKG=$TMP/pkg-$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}
-CWD=$(pwd)
-JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
 
-if [ "$ARCH" = "i486" ]; then
-  SLKCFLAGS="-O2 -march=i486 -mtune=i686"
+TMP=${TMP:-/tmp/gfs}
+PKG=$TMP/package-$PRGNAM
+OUTPUT=${OUTPUT:-/tmp}
+
+if [ "$ARCH" = "i586" ]; then
+  SLKCFLAGS="-O2 -march=i586 -mtune=i686"
   LIBDIRSUFFIX=""
 elif [ "$ARCH" = "i686" ]; then
   SLKCFLAGS="-O2 -march=i686 -mtune=i686"
@@ -57,38 +66,12 @@ fi
 
 set -e
 
-UMASKBKP=$(umask)
-umask 0022
-
-if [ -z $VERSION ]
- then
- VERSION=0.2.6
-fi
-
-MDSCHK=d23b7e3287b1c67c16ac74dcc27e0814
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | rev | cut -f2,3 -d. | rev)/$PRGNAM-$VERSION.tar.xz"}
-
-if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo $PRGNAM-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $PRGNAM-$VERSION.tar.xz
-   $DWNLCMD $SRCDOWN
- fi
-fi
-
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xfv $CWD/$PRGNAM-$VERSION.tar.?z*
+tar xvf $CWD/$PRGNAM-$VERSION.tar.?z
 cd $PRGNAM-$VERSION
-
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -96,20 +79,18 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-mkdir -p build
+mkdir build
 cd build
-
-CFLAGS="$SLKCFLAGS" \
-CXXFLAGS="$SLKCFLAGS" \
-meson .. \
- --prefix=/usr \
- --buildtype=release \
- --libdir=lib${LIBDIRSUFFIX} \
- --libexecdir=/usr/libexec \
- --sysconfdir=/etc \
- --infodir=/usr/info \
- --mandir=/usr/man \
- --localstatedir=/var \
+  CFLAGS="$SLKCFLAGS" \
+  CXXFLAGS="$SLKCFLAGS" \
+  meson .. \
+    --buildtype=release \
+    --infodir=/usr/info \
+    --libdir=/usr/lib${LIBDIRSUFFIX} \
+    --localstatedir=/var \
+    --mandir=/usr/man \
+    --prefix=/usr \
+    --sysconfdir=/etc \
  -Ddefault_library=shared \
  -Ddemos=false \
  -Dbuild-tests=false \
@@ -118,38 +99,28 @@ meson .. \
  -Dintrospection=true \
  -Dvapi=true \
  -Dgudev=enabled
-
-ninja $JOBS || ninja
-DESTDIR=$PKG ninja install
+  ninja
+  DESTDIR=$PKG ninja install
+cd ..
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
-cd ..
+rm -rf $PKG/usr/lib${LIBDIRSUFFIX}/*.la
+
+find $PKG -name perllocal.pod \
+  -o -name ".packlist" \
+  -o -name "*.bs" \
+  | xargs rm -f
+
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a COPYING NEWS *.md \
-  $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
+DOCS="HACKING.md COPYING* NEWS README.md"
+cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM: $PRGNAM
-$PRGNAM:
-$PRGNAM: GObject game controller library
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://gitlab.gnome.org/aplazas/libmanette
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
-
-umask ${UMASKBKP}
-
