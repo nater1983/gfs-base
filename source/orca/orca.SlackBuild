@@ -4,6 +4,7 @@
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
 # All rights reserved.
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -65,10 +66,10 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=40.0
+ VERSION=42.3
 fi
 
-MDSCHK=7bbf17da4430b8672c622a2e634295fa
+MDSCHK=a3de87d5cad45b08d080f657334978a9
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | cut -f1	 -d.)/$PRGNAM-$VERSION.tar.xz"}
 
@@ -129,46 +130,10 @@ cp -a AUTHORS COPYING ChangeLog INSTALL MAINTAINERS NEWS README* TODO \
 cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: Orca
-$PRGNAM:
-$PRGNAM: Orca is a technology for people with visual impairments.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://wiki.gnome.org/Projects/Orca
-$PRGNAM:
-EOT
-
-cat <<\EOT >$PKG/install/doinst.sh
-if [ -x /usr/bin/update-mime-database ]; then
-  /usr/bin/update-mime-database /usr/share/mime &> /dev/null
-fi
-
-if [ -x /usr/bin/update-desktop-database ]; then
-  /usr/bin/update-desktop-database -q usr/share/applications >/dev/null 2>&1
-fi
-
-if [ -e usr/share/icons/hicolor/icon-theme.cache ]; then
-  if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    /usr/bin/gtk-update-icon-cache usr/share/icons/hicolor >/dev/null 2>&1
-  fi
-fi
-
-if [ -e usr/share/glib-2.0/schemas ]; then
-  if [ -x /usr/bin/glib-compile-schemas ]; then
-    /usr/bin/glib-compile-schemas usr/share/glib-2.0/schemas >/dev/null 2>&1
-  fi
-fi
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
 
 umask ${UMASKBKP}
-
