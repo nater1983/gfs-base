@@ -34,16 +34,16 @@ colord									DONE
 colord-gtk								DONE
 constantly
 cssselect								DONE
-cunit								Up to Date
+cunit									Up to Date
 cups-pk-helper								DONE
-cython								DONE
+cython									DONE
 dbus-test-runner
 devhelp
 dog
 dpdk
 elixir									DONE
 enchant2
-eog
+eog									DONE
 epiphany								DONE
 erlang-otp								DONE
 evince
@@ -94,19 +94,19 @@ gnome-online-accounts							DONE
 gnome-online-miners							Up-To-Date
 gnome-panel								DONE
 gnome-photos								DONE
-gnome-remote-desktop
-gnome-screenshot
-gnome-session
-gnome-settings-daemon								DONE
+gnome-remote-desktop							DONE
+gnome-screenshot							DONE
+gnome-session								DONE
+gnome-settings-daemon							DONE
 gnome-shell								DONE
-gnome-shell-extensions								DONE
+gnome-shell-extensions							DONE
 gnome-system-monitor
 gnome-terminal								DONE
-gnome-tour
-gnome-tweaks
-gnome-user-docs
-gnome-user-share
-gnome-video-effects
+gnome-tour								DONE
+gnome-tweaks								DONE
+gnome-user-docs								DONE
+gnome-user-share							DONE
+gnome-video-effects							DONE
 gnome-weather								DONE
 gnote
 gom
@@ -151,7 +151,7 @@ libglib-testing
 libgnomekbd								DONE
 libgrss
 libgusb
-libgweather									DONE
+libgweather								DONE
 libgxps
 libhandy
 libiptcdata
@@ -195,7 +195,7 @@ metacity
 mistune
 mm-common
 more-itertools
-mutter								DONE
+mutter									DONE
 mypy
 mypy_extensions
 nautilus								DONE
@@ -221,7 +221,7 @@ pyflakes
 pytest-runner
 python-m2r
 python-mccabe
-python-toml									Current already has it ( python-tomli )
+python-toml								Current already has it ( python-tomli )
 python-twisted
 python-webencodings
 python2-scandir
@@ -287,15 +287,15 @@ wheel
 wpebackend-fdo								DONE
 wxPython
 xdg-dbus-proxy								Current already has it
-xdg-desktop-portal								Current already has it
-xdg-desktop-portal-gnome								DONE
-xdg-desktop-portal-gtk								DONE
+xdg-desktop-portal							Current already has it
+xdg-desktop-portal-gnome						DONE
+xdg-desktop-portal-gtk							DONE
 xen
 xmlsec
 yajl
 yelp									DONE
 yelp-tools								DONE
 yelp-xsl								DONE
-ytnef								DONE
-zenity								DONE
+ytnef									DONE
+zenity									DONE
 zope.interface
