@@ -6,6 +6,7 @@
 # Copyright 2014-2021 Willy Sudiarto Raharjo <willysr@slackbuilds.org>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
 # All rights reserved.
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -72,10 +73,10 @@ OPTDEP="perl-Text-CSV"
 
 if [ -z $VERSION ]
  then
- VERSION=1.2.0
+ VERSION=1.3.1
 fi
 
-MDSCHK=37c36412593d73f6a090b4545d1b0364
+MDSCHK=27f0dc7f33cbfdaa6c9eb7cf169f4866
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | cut -f1,2 -d.)/$PRGNAM-$VERSION.tar.xz"}
 
@@ -133,20 +134,8 @@ cp -a AUTHORS COPYING.LIB ChangeLog NEWS README $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: gtk-vnc (VNC viewer widget for GTK)
-$PRGNAM:
-$PRGNAM: gtk-vnc is a VNC viewer widget for GTK. It is built using coroutines
-$PRGNAM: allowing it to be completely asynchronous while remaining single
-$PRGNAM: threaded. It provides a core C library, and bindings for Python
-$PRGNAM: (PyGTK).
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://wiki.gnome.org/Projects/gtk-vnc
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
