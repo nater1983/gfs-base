@@ -121,12 +121,13 @@ gtest
 gtk-frdp
 gtk-vnc
 gtk4									DONE
-gtksourceview4
+gtksourceview4									DONE
+gtksourceview5									DONE
 gtkspell3
 gupnp
 gupnp-av
 gupnp-dlna
-highlight
+highlight									DONE
 html5lib
 hyperlink
 imagesize
@@ -141,9 +142,9 @@ libaccounts-glib
 libcacard
 libchamplain								DONE
 libcloudproviders							DONE
-libdaemon
+libdaemon									DONE
 libdazzle
-libdmapsharing3
+libdmapsharing3									DONE
 libgdata
 libgit2
 libgit2-glib
@@ -185,7 +186,7 @@ libwpe
 libzapojit
 lttng-ust
 lua
-lua53
+lua53									DONE
 luajit
 luasocket
 lxml
