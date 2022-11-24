@@ -112,22 +112,22 @@ gnote
 gom
 grilo
 grilo-plugins
-gsound
+gsound									DONE
 gspell
 gssdp
 gst-editing-services
 gst-plugins-bad
 gtest
-gtk-frdp
+gtk-frdp								DONE
 gtk-vnc
 gtk4									DONE
-gtksourceview4									DONE
-gtksourceview5									DONE
+gtksourceview4								DONE
+gtksourceview5								DONE
 gtkspell3
 gupnp
 gupnp-av
 gupnp-dlna
-highlight									DONE
+highlight								DONE
 html5lib
 hyperlink
 imagesize
@@ -142,9 +142,9 @@ libaccounts-glib
 libcacard
 libchamplain								DONE
 libcloudproviders							DONE
-libdaemon									DONE
+libdaemon								DONE
 libdazzle
-libdmapsharing3									DONE
+libdmapsharing3								DONE
 libgdata
 libgit2
 libgit2-glib
