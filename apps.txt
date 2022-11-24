@@ -1,5 +1,3 @@
-*gtk-vnc
-*metacity
 *mutter	
 *orca
 *p7zip

@@ -119,7 +119,7 @@ gst-editing-services
 gst-plugins-bad
 gtest
 gtk-frdp								DONE
-gtk-vnc
+gtk-vnc									DONE
 gtk4									DONE
 gtksourceview4								DONE
 gtksourceview5								DONE
@@ -192,7 +192,7 @@ luasocket
 lxml
 malcontent
 memphis
-metacity
+metacity								DONE
 mistune
 mm-common
 more-itertools
@@ -207,7 +207,7 @@ oath-toolkit
 openwsman
 orca
 ostree
-p7zip								DONE
+p7zip									DONE
 pathlib2
 perl-Text-CSV
 phodav
