@@ -4,6 +4,7 @@
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
 # All rights reserved.
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -69,7 +70,7 @@ if [ -z $VERSION ]
 fi
 
 DWNLCMD=${DWNLCMD:-"git clone"}
-SRCDOWN=${SRCDOWN:-"https://gitlab.gnome.org/felipeborges/$PRGNAM.git"}
+SRCDOWN=${SRCDOWN:-"https://gitlab.gnome.org/GNOME/$PRGNAM.git"}
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -77,7 +78,6 @@ cd $TMP
 rm -rf $PRGNAM/
 $DWNLCMD $SRCDOWN
 cd $PRGNAM
-
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -99,8 +99,7 @@ meson .. \
  --infodir=/usr/info \
  --mandir=/usr/man \
  --localstatedir=/var \
- -Ddefault_library=shared \
- -Dexamples=false
+ -Ddefault_library=shared 
 
 ninja $JOBS || ninja
 DESTDIR=$PKG ninja install
@@ -115,20 +114,7 @@ cp -a COPYING \
 cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: gtk-frdp
-$PRGNAM:
-$PRGNAM: A RDP viewer widget for Gtk.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://gitlab.gnome.org/GNOME/gtk-frdp
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
