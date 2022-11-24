@@ -121,7 +121,8 @@ gtest
 gtk-frdp
 gtk-vnc
 gtk4									DONE
-gtksourceview4
+gtksourceview4									DONE
+gtksourceview5									DONE
 gtkspell3
 gupnp
 gupnp-av
