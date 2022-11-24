@@ -150,7 +150,7 @@ libgit2
 libgit2-glib
 libglib-testing
 libgnomekbd								DONE
-libgrss
+libgrss									DONE
 libgusb
 libgweather								DONE
 libgxps
