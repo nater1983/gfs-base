@@ -6,14 +6,14 @@
 # customary to leave one space after the ':' except on otherwise blank lines.
 
         |-----handy-ruler------------------------------------------------------|
-$PRGNAM:
-$PRGNAM: libiscsi (client-side library)
-$PRGNAM:
-$PRGNAM: Libiscsi is a client-side library to implement the iSCSI protocol
-$PRGNAM: that can be used to access the resources of an iSCSI target.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://github.com/sahlberg/libiscsi
-$PRGNAM:
+libiscsi:
+libiscsi: libiscsi (client-side library)
+libiscsi:
+libiscsi: Libiscsi is a client-side library to implement the iSCSI protocol
+libiscsi: that can be used to access the resources of an iSCSI target.
+libiscsi:
+libiscsi: Homepage: https://github.com/sahlberg/libiscsi
+libiscsi:
+libiscsi:
+libiscsi:
+libiscsi:
