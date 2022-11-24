@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Slackware build script for libdmapsharing
+# Slackware build script for libdmapsharing3
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
 # 20220611 jbl: Updated to latest version
@@ -22,11 +22,11 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-https://gitlab.gnome.org/GNOME/libdmapsharing/-/archive/LIBDMAPSHARING_3_9_10/libdmapsharing-LIBDMAPSHARING_3_9_10.tar.gz
+wget -c --no-check-certificate https://gitlab.gnome.org/GNOME/libdmapsharing/-/archive/LIBDMAPSHARING_3_9_10/libdmapsharing-LIBDMAPSHARING_3_9_10.tar.gz
 
 cd $(dirname $0) ; CWD=$(pwd)
 
-PRGNAM=libdmapsharing
+PRGNAM=libdmapsharing3
 SRCVER=${SRCVER:-LIBDMAPSHARING_3_9_10}
 VERSION=${VERSION:-3.9.10}
 BUILD=${BUILD:-1}
