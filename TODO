@@ -37,12 +37,12 @@ cssselect								DONE
 cunit									Up to Date
 cups-pk-helper								DONE
 cython									DONE
-dbus-test-runner
-devhelp
-dog
+dbus-test-runner								DONE
+devhelp								DONE
+dog								DONE
 dpdk
 elixir									DONE
-enchant2
+enchant2								DONE
 eog									DONE
 epiphany								DONE
 erlang-otp								DONE
@@ -207,7 +207,7 @@ oath-toolkit
 openwsman
 orca
 ostree
-p7zip
+p7zip								DONE
 pathlib2
 perl-Text-CSV
 phodav
