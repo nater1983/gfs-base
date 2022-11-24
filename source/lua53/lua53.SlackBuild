@@ -4,6 +4,7 @@
 
 # Copyright 2018 Azure Zanculmarktum <zanculmarktum@gmail.com>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Copyright 2022 Nathaniel Russell <naterussell83@gmail.com> Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -25,11 +26,14 @@
 
 # Some of the codes were taken from development/lua/lua.SlackBuild
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
+cd $(dirname $0) ; CWD=$(pwd)
+
+PRGNAM=lua53
 SRCNAM=${PRGNAM%??}
-VERSION=${VERSION:-$(find . -maxdepth 1 -name "$SRCNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
+VERSION=${VERSION:-5.3.4}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_gfs}
+TAG=${TAG:-_SBo}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -39,11 +43,17 @@ if [ -z "$ARCH" ]; then
   esac
 fi
 
-CWD=$(pwd)
-TMP=${TMP:-/tmp/gfs}
+# If the variable PRINT_PACKAGE_NAME is set, then this script will report what
+# the name of the created package would be, and then exit. This information
+# could be useful to other scripts.
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
+
+TMP=${TMP:-/tmp/SBo}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
-JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
 
 if [ "$ARCH" = "i586" ]; then
   SLKCFLAGS="-O2 -march=i586 -mtune=i686"
@@ -61,41 +71,12 @@ fi
 
 set -e
 
-UMASKBKP=$(umask)
-umask 0022
-
-DEPCHK=""
-OPTDEP=""
-
-if [ -z $VERSION ]
- then
- VERSION=5.3.4
-fi
-
-MDSCHK=53a9c68bcc0eda58bdc2095ad5cdfc63
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://www.lua.org/ftp/lua-$VERSION.tar.gz"}
-
-if [ -z $(find . -maxdepth 1 -name "$SRCNAM-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo $SRCNAM-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $PRGNAM-$VERSION.tar.?z*
-   $DWNLCMD $SRCDOWN
- fi
-fi
-
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $SRCNAM-$VERSION
 tar xvf $CWD/$SRCNAM-$VERSION.tar.gz
 cd $SRCNAM-$VERSION
-
 chown -R root:root .
 find -L . \
   \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -127,7 +108,7 @@ sed -i \
   -e '/^#define LUA_CDIR/s,"lib,&'"${LIBDIRSUFFIX}"',' \
   src/luaconf.h
 
-make $JOBS linux || make linux
+make linux
 make install DESTDIR=$PKG
 
 # Now let's build the shared library
@@ -164,13 +145,8 @@ cd $PKG/usr/man/man1
   mv luac.1 luac$V.1
 cd - >/dev/null
 
-mkdir $PKG/usr/include/lua
-ln -s /usr/include/lua5.3 $PKG/usr/include/lua/5.3
-
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
-
-find $PKG -name '*.a' -delete
 
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
@@ -180,23 +156,7 @@ cp -a README $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: lua53 (powerful, fast, light-weight, embeddable scripting language)
-$PRGNAM:
-$PRGNAM: This package contains lua version 5.3.x that won't conflicts with lua
-$PRGNAM: version 5.1.x and 5.2.x
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://www.lua.org/
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
-
-umask ${UMASKBKP}
-
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
