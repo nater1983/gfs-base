@@ -205,7 +205,7 @@ nspr
 numactl
 oath-toolkit
 openwsman
-orca
+orca									DONE
 ostree
 p7zip									DONE
 pathlib2
