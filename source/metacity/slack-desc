@@ -6,8 +6,14 @@
 # customary to leave one space after the ':' except on otherwise blank lines.
 
         |-----handy-ruler------------------------------------------------------|
-metacity: Metacity
-metacity:
-metacity: Metacity is the Gtk+3-based window manager used in
-metacity: Projects/GnomeFlashback.
-metacity:
+$PRGNAM: metacity ( Window manager of GNOME Flashback )
+$PRGNAM: 
+$PRGNAM:
+$PRGNAM: Metacity is the Gtk+3-based window manager used in
+$PRGNAM: Projects/GnomeFlashback.
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM:
+$PRGNAM: https://wiki.gnome.org/Projects/Metacity
+$PRGNAM:
