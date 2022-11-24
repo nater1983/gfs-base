@@ -1,5 +1,6 @@
 Submitted By:            Douglas R. Reno <renodr at linuxfromscratch dot org>
 Date:                    2019-09-10
+Updated Date:            2022-01-11
 Initial Package Version: 0.7.0
 Upstream Status:         Submitted (PR)
 Origin:                  Self
@@ -9,10 +10,12 @@ Description:             Fixes several bugs in libgrss. This includes porting
                          fixing signal emission problems, upgrading g-i files,
                          fixing authentication bugs, and porting from
                          GSimpleAsync to GTask.
+                         [UPDATED 2022-01-11]: Added security fix for CVE-2016-20011
+                         into the mix.
 
 diff -Naurp libgrss-0.7.0.orig/configure.ac libgrss-0.7.0/configure.ac
 --- libgrss-0.7.0.orig/configure.ac	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/configure.ac	2019-04-10 00:01:12.448526750 -0500
++++ libgrss-0.7.0/configure.ac	2022-01-11 10:33:52.243736902 -0600
 @@ -2,13 +2,13 @@
  # bump micro_version to the next odd number after each release
  m4_define([grss_major_version], [0])
@@ -31,7 +34,7 @@ diff -Naurp libgrss-0.7.0.orig/configure.ac libgrss-0.7.0/configure.ac
  m4_define([lt_current], [m4_eval(100 * grss_minor_version + grss_micro_version - grss_interface_age)])
 diff -Naurp libgrss-0.7.0.orig/doc/reference/libgrss-docs.sgml libgrss-0.7.0/doc/reference/libgrss-docs.sgml
 --- libgrss-0.7.0.orig/doc/reference/libgrss-docs.sgml	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/doc/reference/libgrss-docs.sgml	2019-04-09 23:51:42.414042258 -0500
++++ libgrss-0.7.0/doc/reference/libgrss-docs.sgml	2022-01-11 10:33:52.243736902 -0600
 @@ -55,7 +55,6 @@
  
      <xi:include href="xml/feed-atom-handler.xml"/>
@@ -42,13 +45,13 @@ diff -Naurp libgrss-0.7.0.orig/doc/reference/libgrss-docs.sgml libgrss-0.7.0/doc
      <xi:include href="xml/feeds-group-handler.xml"/>
 diff -Naurp libgrss-0.7.0.orig/doc/reference/version.xml.in libgrss-0.7.0/doc/reference/version.xml.in
 --- libgrss-0.7.0.orig/doc/reference/version.xml.in	2015-07-15 15:59:07.000000000 -0500
-+++ libgrss-0.7.0/doc/reference/version.xml.in	2019-04-10 00:01:52.056757372 -0500
++++ libgrss-0.7.0/doc/reference/version.xml.in	2022-01-11 10:33:52.243736902 -0600
 @@ -1 +1 @@
 -@LIBGRSS_VERSION@
 +@GRSS_VERSION@
 diff -Naurp libgrss-0.7.0.orig/src/feed-atom-handler.c libgrss-0.7.0/src/feed-atom-handler.c
 --- libgrss-0.7.0.orig/src/feed-atom-handler.c	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/src/feed-atom-handler.c	2019-04-10 00:28:07.125200045 -0500
++++ libgrss-0.7.0/src/feed-atom-handler.c	2022-01-11 10:33:52.244736897 -0600
 @@ -63,6 +63,14 @@ feed_atom_handler_error_quark ()
  static void
  feed_atom_handler_finalize (GObject *object)
@@ -96,7 +99,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-atom-handler.c libgrss-0.7.0/src/feed-at
  		}
 diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel.c
 --- libgrss-0.7.0.orig/src/feed-channel.c	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/src/feed-channel.c	2019-04-10 00:45:23.191159682 -0500
++++ libgrss-0.7.0/src/feed-channel.c	2022-01-11 10:34:18.966598795 -0600
 @@ -103,6 +103,8 @@ grss_feed_channel_finalize (GObject *obj
  	FREE_STRING (chan->priv->rsscloud.path);
  	FREE_STRING (chan->priv->rsscloud.protocol);
@@ -135,7 +138,16 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
  	xmlDocPtr doc;
  	GrssFeedParser *parser;
  
-@@ -1010,7 +1016,7 @@ grss_feed_channel_fetch (GrssFeedChannel
+@@ -973,6 +979,8 @@ quick_and_dirty_parse (GrssFeedChannel *
+ static void
+ init_soup_session (SoupSession *session, GrssFeedChannel *channel)
+ {
++   g_object_set (G_OBJECT (session), "ssl-use-system-ca-file", TRUE, NULL);
++
+ 	if (channel->priv->jar != NULL)
+ 		soup_session_add_feature (session, SOUP_SESSION_FEATURE (channel->priv->jar));
+ 	if (channel->priv->gzip == TRUE)
+@@ -1010,7 +1018,7 @@ grss_feed_channel_fetch (GrssFeedChannel
  
  	ret = FALSE;
  
@@ -144,7 +156,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
  	init_soup_session (session, channel);
  
  	msg = soup_message_new ("GET", grss_feed_channel_get_source (channel));
-@@ -1036,26 +1042,27 @@ grss_feed_channel_fetch (GrssFeedChannel
+@@ -1036,26 +1044,27 @@ grss_feed_channel_fetch (GrssFeedChannel
  static void
  feed_downloaded (SoupSession *session, SoupMessage *msg, gpointer user_data) {
  	guint status;
@@ -179,7 +191,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
  }
  
  /**
-@@ -1074,10 +1081,7 @@ feed_downloaded (SoupSession *session, S
+@@ -1074,10 +1083,7 @@ feed_downloaded (SoupSession *session, S
  gboolean
  grss_feed_channel_fetch_finish (GrssFeedChannel *channel, GAsyncResult *res, GError **error)
  {
@@ -191,7 +203,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
  }
  
  static void
-@@ -1098,7 +1102,7 @@ do_prefetch (GrssFeedChannel *channel)
+@@ -1098,7 +1104,7 @@ do_prefetch (GrssFeedChannel *channel)
  void
  grss_feed_channel_fetch_async (GrssFeedChannel *channel, GAsyncReadyCallback callback, gpointer user_data)
  {
@@ -200,7 +212,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
  	SoupMessage *msg;
  	SoupSession *session;
  
-@@ -1107,16 +1111,15 @@ grss_feed_channel_fetch_async (GrssFeedC
+@@ -1107,16 +1113,15 @@ grss_feed_channel_fetch_async (GrssFeedC
  	*/
  
  	do_prefetch (channel);
@@ -220,7 +232,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
  }
  
  /**
-@@ -1140,7 +1143,7 @@ grss_feed_channel_fetch_all (GrssFeedCha
+@@ -1140,7 +1145,7 @@ grss_feed_channel_fetch_all (GrssFeedCha
  	SoupMessage *msg;
  	SoupSession *session;
  
@@ -229,7 +241,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
  	init_soup_session (session, channel);
  
  	msg = soup_message_new ("GET", grss_feed_channel_get_source (channel));
-@@ -1182,30 +1185,29 @@ feed_downloaded_return_items (SoupSessio
+@@ -1182,30 +1187,29 @@ feed_downloaded_return_items (SoupSessio
  {
  	guint status;
  	GList *items;
@@ -267,7 +279,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
  }
  
  /**
-@@ -1219,21 +1221,20 @@ feed_downloaded_return_items (SoupSessio
+@@ -1219,21 +1223,20 @@ feed_downloaded_return_items (SoupSessio
  void
  grss_feed_channel_fetch_all_async (GrssFeedChannel *channel, GAsyncReadyCallback callback, gpointer user_data)
  {
@@ -293,7 +305,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
  }
  
  /**
-@@ -1254,10 +1255,7 @@ grss_feed_channel_fetch_all_async (GrssF
+@@ -1254,10 +1257,7 @@ grss_feed_channel_fetch_all_async (GrssF
  GList*
  grss_feed_channel_fetch_all_finish (GrssFeedChannel *channel, GAsyncResult *res, GError **error)
  {
@@ -305,7 +317,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
  }
  
  /**
-@@ -1275,11 +1273,10 @@ grss_feed_channel_fetch_cancel (GrssFeed
+@@ -1275,11 +1275,10 @@ grss_feed_channel_fetch_cancel (GrssFeed
  {
  	if (channel->priv->fetchcancel != NULL) {
  		g_cancellable_cancel (channel->priv->fetchcancel);
@@ -320,17 +332,19 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-channel.c libgrss-0.7.0/src/feed-channel
 -
 diff -Naurp libgrss-0.7.0.orig/src/feed-enclosure.c libgrss-0.7.0/src/feed-enclosure.c
 --- libgrss-0.7.0.orig/src/feed-enclosure.c	2015-07-15 15:59:07.000000000 -0500
-+++ libgrss-0.7.0/src/feed-enclosure.c	2019-04-10 00:21:24.288851984 -0500
-@@ -219,7 +219,7 @@ grss_feed_enclosure_fetch (GrssFeedEnclo
++++ libgrss-0.7.0/src/feed-enclosure.c	2022-01-11 10:35:33.586213273 -0600
+@@ -219,7 +219,9 @@ grss_feed_enclosure_fetch (GrssFeedEnclo
  	ret = NULL;
  	url = grss_feed_enclosure_get_url (enclosure);
  
 -	session = soup_session_sync_new ();
 +	session = soup_session_new ();
++   g_object_set (G_OBJECT (session), "ssl-use-system-ca-file", TRUE, NULL);
++
  	msg = soup_message_new ("GET", url);
  	status = soup_session_send_message (session, msg);
  
-@@ -239,12 +239,12 @@ enclosure_downloaded (SoupSession *sessi
+@@ -239,12 +241,12 @@ enclosure_downloaded (SoupSession *sessi
  	guint status;
  	const gchar *url;
  	GFile *file;
@@ -346,7 +360,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-enclosure.c libgrss-0.7.0/src/feed-enclo
  	url = grss_feed_enclosure_get_url (enclosure);
  	g_object_get (msg, "status-code", &status, NULL);
  
-@@ -253,17 +253,16 @@ enclosure_downloaded (SoupSession *sessi
+@@ -253,17 +255,16 @@ enclosure_downloaded (SoupSession *sessi
  		file = msg_to_internal_file (enclosure, msg, &error);
  
  		if (file != NULL)
@@ -368,7 +382,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-enclosure.c libgrss-0.7.0/src/feed-enclo
  }
  
  /**
-@@ -277,14 +276,14 @@ enclosure_downloaded (SoupSession *sessi
+@@ -277,14 +278,16 @@ enclosure_downloaded (SoupSession *sessi
  void
  grss_feed_enclosure_fetch_async (GrssFeedEnclosure *enclosure, GAsyncReadyCallback callback, gpointer user_data)
  {
@@ -381,13 +395,15 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-enclosure.c libgrss-0.7.0/src/feed-enclo
 -	session = soup_session_async_new ();
 +	task = g_task_new (enclosure, NULL, callback, user_data);
 +	session = soup_session_new ();
++   g_object_set (G_OBJECT (session), "ssl-use-system-ca-file", TRUE, NULL);
++
  	msg = soup_message_new ("GET", grss_feed_enclosure_get_url (enclosure));
 -	soup_session_queue_message (session, msg, enclosure_downloaded, result);
 +	soup_session_queue_message (session, msg, enclosure_downloaded, task);
  }
  
  /**
-@@ -303,8 +302,5 @@ grss_feed_enclosure_fetch_async (GrssFee
+@@ -303,8 +306,5 @@ grss_feed_enclosure_fetch_async (GrssFee
  GFile*
  grss_feed_enclosure_fetch_finish (GrssFeedEnclosure *enclosure, GAsyncResult *res, GError **error)
  {
@@ -399,7 +415,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-enclosure.c libgrss-0.7.0/src/feed-enclo
  }
 diff -Naurp libgrss-0.7.0.orig/src/feed-item.c libgrss-0.7.0/src/feed-item.c
 --- libgrss-0.7.0.orig/src/feed-item.c	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/src/feed-item.c	2019-04-10 00:02:49.610543227 -0500
++++ libgrss-0.7.0/src/feed-item.c	2022-01-11 10:33:52.244736897 -0600
 @@ -136,7 +136,6 @@ grss_feed_item_new (GrssFeedChannel *par
  
  	item = GRSS_FEED_ITEM (g_object_new (GRSS_FEED_ITEM_TYPE, NULL));
@@ -410,7 +426,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-item.c libgrss-0.7.0/src/feed-item.c
  
 diff -Naurp libgrss-0.7.0.orig/src/feed-parser.c libgrss-0.7.0/src/feed-parser.c
 --- libgrss-0.7.0.orig/src/feed-parser.c	2015-07-15 15:59:07.000000000 -0500
-+++ libgrss-0.7.0/src/feed-parser.c	2019-04-09 23:31:31.714083101 -0500
++++ libgrss-0.7.0/src/feed-parser.c	2022-01-11 10:33:52.283736696 -0600
 @@ -65,6 +65,9 @@ grss_feed_parser_error_quark ()
  static void
  grss_feed_parser_finalize (GObject *object)
@@ -456,7 +472,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-parser.c libgrss-0.7.0/src/feed-parser.c
  	return parser->priv->handlers;
 diff -Naurp libgrss-0.7.0.orig/src/feed-pie-handler.c libgrss-0.7.0/src/feed-pie-handler.c
 --- libgrss-0.7.0.orig/src/feed-pie-handler.c	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/src/feed-pie-handler.c	2019-04-10 00:24:39.979851646 -0500
++++ libgrss-0.7.0/src/feed-pie-handler.c	2022-01-11 10:33:52.283736696 -0600
 @@ -62,7 +62,11 @@ feed_pie_handler_error_quark ()
  static void
  feed_pie_handler_finalize (GObject *object)
@@ -481,7 +497,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-pie-handler.c libgrss-0.7.0/src/feed-pie
  		}
 diff -Naurp libgrss-0.7.0.orig/src/feed-rss-formatter.c libgrss-0.7.0/src/feed-rss-formatter.c
 --- libgrss-0.7.0.orig/src/feed-rss-formatter.c	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/src/feed-rss-formatter.c	2019-04-09 23:35:19.729038185 -0500
++++ libgrss-0.7.0/src/feed-rss-formatter.c	2022-01-11 10:33:52.284736691 -0600
 @@ -41,8 +41,7 @@ feed_rss_formatter_format (GrssFeedForma
  	time_t date;
  	GList *iter;
@@ -494,7 +510,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-rss-formatter.c libgrss-0.7.0/src/feed-r
  	GrssFeedItem *item;
 diff -Naurp libgrss-0.7.0.orig/src/feed-rss-handler.c libgrss-0.7.0/src/feed-rss-handler.c
 --- libgrss-0.7.0.orig/src/feed-rss-handler.c	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/src/feed-rss-handler.c	2019-04-10 00:26:49.126809861 -0500
++++ libgrss-0.7.0/src/feed-rss-handler.c	2022-01-11 10:33:52.284736691 -0600
 @@ -75,6 +75,11 @@ feed_rss_handler_error_quark ()
  static void
  feed_rss_handler_finalize (GObject *object)
@@ -531,7 +547,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feed-rss-handler.c libgrss-0.7.0/src/feed-rss
  	else {
 diff -Naurp libgrss-0.7.0.orig/src/feeds-group.c libgrss-0.7.0/src/feeds-group.c
 --- libgrss-0.7.0.orig/src/feeds-group.c	2015-07-15 15:59:07.000000000 -0500
-+++ libgrss-0.7.0/src/feeds-group.c	2019-04-10 00:37:07.985868698 -0500
++++ libgrss-0.7.0/src/feeds-group.c	2022-01-11 10:33:52.284736691 -0600
 @@ -238,7 +238,7 @@ grss_feeds_group_parse_file (GrssFeedsGr
   * @error: location for eventual errors.
   *
@@ -552,17 +568,18 @@ diff -Naurp libgrss-0.7.0.orig/src/feeds-group.c libgrss-0.7.0/src/feeds-group.c
  				g_propagate_error (error, err);
 diff -Naurp libgrss-0.7.0.orig/src/feeds-pool.c libgrss-0.7.0/src/feeds-pool.c
 --- libgrss-0.7.0.orig/src/feeds-pool.c	2015-07-15 15:59:07.000000000 -0500
-+++ libgrss-0.7.0/src/feeds-pool.c	2019-04-10 00:53:11.331558847 -0500
-@@ -177,7 +177,7 @@ grss_feeds_pool_init (GrssFeedsPool *nod
++++ libgrss-0.7.0/src/feeds-pool.c	2022-01-11 10:36:02.459064144 -0600
+@@ -177,7 +177,8 @@ grss_feeds_pool_init (GrssFeedsPool *nod
  	node->priv = FEEDS_POOL_GET_PRIVATE (node);
  	memset (node->priv, 0, sizeof (GrssFeedsPoolPrivate));
  	node->priv->parser = grss_feed_parser_new ();
 -	node->priv->soupsession = soup_session_async_new ();
 +	node->priv->soupsession = soup_session_new ();
++   g_object_set (G_OBJECT (node->priv->soupsession), "ssl-use-system-ca-file", TRUE, NULL);
  }
  
  /**
-@@ -291,19 +291,21 @@ feed_downloaded (GObject *source, GAsync
+@@ -291,19 +292,21 @@ feed_downloaded (GObject *source, GAsync
  {
  	GList *items;
  	GrssFeedChannelWrap *feed;
@@ -586,7 +603,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feeds-pool.c libgrss-0.7.0/src/feeds-pool.c
  }
  
  static gboolean
-@@ -324,9 +326,11 @@ fetch_feeds (gpointer data)
+@@ -324,9 +327,11 @@ fetch_feeds (gpointer data)
  
  	for (iter = pool->priv->feeds_list; iter; iter = g_list_next (iter)) {
  		feed = (GrssFeedChannelWrap*) iter->data;
@@ -602,7 +619,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feeds-pool.c libgrss-0.7.0/src/feeds-pool.c
  }
 diff -Naurp libgrss-0.7.0.orig/src/feeds-publisher.c libgrss-0.7.0/src/feeds-publisher.c
 --- libgrss-0.7.0.orig/src/feeds-publisher.c	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/src/feeds-publisher.c	2019-04-10 00:34:22.232723193 -0500
++++ libgrss-0.7.0/src/feeds-publisher.c	2022-01-11 10:36:35.701892442 -0600
 @@ -102,7 +102,7 @@ enum {
  G_DEFINE_TYPE (GrssFeedsPublisher, grss_feeds_publisher, G_TYPE_OBJECT);
  
@@ -681,12 +698,16 @@ diff -Naurp libgrss-0.7.0.orig/src/feeds-publisher.c libgrss-0.7.0/src/feeds-pub
  		g_object_unref (pub->priv->server);
  		pub->priv->server = NULL;
  	}
-@@ -881,14 +890,15 @@ create_and_run_server (GrssFeedsPublishe
+@@ -880,15 +889,18 @@ create_and_run_server (GrssFeedsPublishe
+ {
  	SoupAddress *soup_addr;
  
- 	if (pub->priv->soupsession == NULL)
+-	if (pub->priv->soupsession == NULL)
 -		pub->priv->soupsession = soup_session_async_new ();
++	if (pub->priv->soupsession == NULL) {
 +		pub->priv->soupsession = soup_session_new ();
++      g_object_set (G_OBJECT (pub->priv->soupsession), "ssl-use-system-ca-file", TRUE, NULL);
++   }
  
  	soup_addr = soup_address_new_any (SOUP_ADDRESS_FAMILY_IPV4, pub->priv->port);
  	pub->priv->server = soup_server_new ("port", pub->priv->port, "interface", soup_addr, NULL);
@@ -701,7 +722,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feeds-publisher.c libgrss-0.7.0/src/feeds-pub
  /**
 diff -Naurp libgrss-0.7.0.orig/src/feeds-publisher.h libgrss-0.7.0/src/feeds-publisher.h
 --- libgrss-0.7.0.orig/src/feeds-publisher.h	2015-07-15 15:59:07.000000000 -0500
-+++ libgrss-0.7.0/src/feeds-publisher.h	2019-04-10 00:34:54.054712602 -0500
++++ libgrss-0.7.0/src/feeds-publisher.h	2022-01-11 10:33:52.284736691 -0600
 @@ -45,9 +45,9 @@ typedef struct {
  	void (*delete_subscription) (GrssFeedsPublisher *pub, GrssFeedChannel *topic, gchar *callback);
  } GrssFeedsPublisherClass;
@@ -716,7 +737,7 @@ diff -Naurp libgrss-0.7.0.orig/src/feeds-publisher.h libgrss-0.7.0/src/feeds-pub
  gboolean		grss_feeds_publisher_publish_web	(GrssFeedsPublisher *pub, GrssFeedChannel *channel, GList *items, const gchar *id, GError **error);
 diff -Naurp libgrss-0.7.0.orig/src/feeds-subscriber.c libgrss-0.7.0/src/feeds-subscriber.c
 --- libgrss-0.7.0.orig/src/feeds-subscriber.c	2015-07-15 15:59:07.000000000 -0500
-+++ libgrss-0.7.0/src/feeds-subscriber.c	2019-04-09 23:47:50.782967714 -0500
++++ libgrss-0.7.0/src/feeds-subscriber.c	2022-01-11 10:37:04.172745414 -0600
 @@ -389,7 +389,7 @@ close_server (GrssFeedsSubscriber *sub)
  {
  	if (sub->priv->server != NULL) {
@@ -726,18 +747,22 @@ diff -Naurp libgrss-0.7.0.orig/src/feeds-subscriber.c libgrss-0.7.0/src/feeds-su
  		g_object_unref (sub->priv->server);
  		sub->priv->server = NULL;
  	}
-@@ -514,7 +514,7 @@ init_run_server (GrssFeedsSubscriber *su
+@@ -513,8 +513,10 @@ init_run_server (GrssFeedsSubscriber *su
+ {
  	GInetAddress *addr;
  
- 	if (sub->priv->soupsession == NULL)
+-	if (sub->priv->soupsession == NULL)
 -		sub->priv->soupsession = soup_session_async_new ();
++	if (sub->priv->soupsession == NULL) {
 +		sub->priv->soupsession = soup_session_new ();
++      g_object_set (G_OBJECT (sub->priv->soupsession), "ssl-use-system-ca-file", TRUE, NULL);
++   }
  
  	/*
  		Flow:
 diff -Naurp libgrss-0.7.0.orig/src/Makefile.am libgrss-0.7.0/src/Makefile.am
 --- libgrss-0.7.0.orig/src/Makefile.am	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/src/Makefile.am	2019-04-10 00:22:54.753625871 -0500
++++ libgrss-0.7.0/src/Makefile.am	2022-01-11 10:33:52.285736686 -0600
 @@ -1,4 +1,4 @@
 -SUBDIRS = tests
 +SUBDIRS = . tests
@@ -755,7 +780,7 @@ diff -Naurp libgrss-0.7.0.orig/src/Makefile.am libgrss-0.7.0/src/Makefile.am
  Grss_0_7_gir_FILES = $(introspection_sources)
 diff -Naurp libgrss-0.7.0.orig/src/ns-handler.c libgrss-0.7.0/src/ns-handler.c
 --- libgrss-0.7.0.orig/src/ns-handler.c	2015-07-18 16:43:44.000000000 -0500
-+++ libgrss-0.7.0/src/ns-handler.c	2019-04-09 23:48:42.071534115 -0500
++++ libgrss-0.7.0/src/ns-handler.c	2022-01-11 10:33:52.285736686 -0600
 @@ -502,7 +502,7 @@ ns_handler_init (NSHandler *node)
  	memset (node->priv, 0, sizeof (NSHandlerPrivate));
  
@@ -776,7 +801,7 @@ diff -Naurp libgrss-0.7.0.orig/src/ns-handler.c libgrss-0.7.0/src/ns-handler.c
  	nsh->handle_channel = NULL;
 diff -Naurp libgrss-0.7.0.orig/src/tests/formatter.c libgrss-0.7.0/src/tests/formatter.c
 --- libgrss-0.7.0.orig/src/tests/formatter.c	2015-07-18 15:22:27.000000000 -0500
-+++ libgrss-0.7.0/src/tests/formatter.c	2019-04-09 23:50:47.141354039 -0500
++++ libgrss-0.7.0/src/tests/formatter.c	2022-01-11 10:33:52.285736686 -0600
 @@ -66,6 +66,9 @@ test_format_atom ()
  
  	formatter = grss_feed_atom_formatter_new ();
@@ -799,7 +824,7 @@ diff -Naurp libgrss-0.7.0.orig/src/tests/formatter.c libgrss-0.7.0/src/tests/for
  int
 diff -Naurp libgrss-0.7.0.orig/src/utils.c libgrss-0.7.0/src/utils.c
 --- libgrss-0.7.0.orig/src/utils.c	2015-07-15 15:59:07.000000000 -0500
-+++ libgrss-0.7.0/src/utils.c	2019-04-10 00:33:27.328014093 -0500
++++ libgrss-0.7.0/src/utils.c	2022-01-11 10:33:52.285736686 -0600
 @@ -559,7 +559,7 @@ detect_internet_address ()
  		return NULL;
  
@@ -811,7 +836,7 @@ diff -Naurp libgrss-0.7.0.orig/src/utils.c libgrss-0.7.0/src/utils.c
  	if (connect (sockfd, (struct sockaddr*) &serv_add, sizeof (serv_add)) == -1) {
 diff -Naurp libgrss-0.7.0.orig/src/utils.h libgrss-0.7.0/src/utils.h
 --- libgrss-0.7.0.orig/src/utils.h	2015-07-15 15:59:07.000000000 -0500
-+++ libgrss-0.7.0/src/utils.h	2019-04-10 00:05:27.316424768 -0500
++++ libgrss-0.7.0/src/utils.h	2022-01-11 10:33:52.285736686 -0600
 @@ -33,6 +33,7 @@
  #include <unistd.h>
  #include <errno.h>

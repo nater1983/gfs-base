@@ -6,14 +6,14 @@
 # customary to leave one space after the ':' except on otherwise blank lines.
 
         |-----handy-ruler------------------------------------------------------|
-libhandy: libhandy (GTK+ widgets for mobile)
-libhandy:
-libhandy: The aim of the Handy library is to help with developing UI for mobile
-libhandy: devices using GTK/GNOME.
-libhandy:
-libhandy: Homepage: https://gitlab.gnome.org/GNOME/libhandy
-libhandy:
-libhandy:
-libhandy:
-libhandy:
-libhandy:
+libisofs:
+libisofs: libisofs (library to create ISO-9660 filesystems with extensions)
+libisofs:
+libisofs: libisofs is a library to create an ISO-9660 filesystem, supports
+libisofs: extensions like RockRidge or Joliet, and introduces an own extension
+libisofs: AAIP.
+libisofs:
+libisofs: Homepage: https://dev.lovelyhq.com/libburnia/web/wikis/Libisofs
+libisofs:
+libisofs:
+libisofs:
