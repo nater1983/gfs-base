@@ -30,15 +30,14 @@
 *gnome-calculator							DONE
 *gnome-calendar								DONE
 *gnome-characters							DONE
-*gnome-clocks
-*gnome-color-manager
-*gnome-contacts
-*Vulkan-Tools
-*Sphinx
-*apparmor
-*brasero
-*cheese
-*chrome-gnome-shell
+*gnome-clocks								DONE
+*gnome-color-manager							DONE
+*gnome-contacts								DONE
+*Vulkan-Tools								DONE
+*apparmor								DONE
+*brasero								DONE
+*cheese									DONE
+*chrome-gnome-shell							DONE
 *clutter-gtk
 *eog									DONE
 *epiphany
