@@ -81,39 +81,40 @@ patch -p1 -i $CWD/unhide-deprecated-api.patch || true
 mkdir -p build
 cd build
   cmake -DPORT=GTK \
-        -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
-        -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_SKIP_RPATH=ON \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DENABLE_GAMEPAD=OFF \
-        -DENABLE_MINIBROWSER=ON \
-        -DUSE_LIBNOTIFY=ON \
-        -DUSE_SYSTEMD=OFF \
-        -DENABLE_GTKDOC=OFF \
-        -DLIB_INSTALL_DIR=/usr/lib${LIBDIRSUFFIX} \
-        -DLIBEXEC_INSTALL_DIR=/usr/lib${LIBDIRSUFFIX}/webkit2gtk-4.0 \
+	      -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
+	      -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
+	      -DCMAKE_BUILD_TYPE=Release \
+	      -DCMAKE_SKIP_RPATH=ON \
+	      -DCMAKE_INSTALL_PREFIX=/usr \
+	      -DLIB_INSTALL_DIR=/usr/lib${LIBDIRSUFFIX} \
+	      -DLIBEXEC_INSTALL_DIR=/usr/lib${LIBDIRSUFFIX}/webkit2gtk-4.0 \  
+        -DUSE_SYSTEM_MALLOC=on \
+	      -DENABLE_GAMEPAD=OFF \
+	      -DENABLE_MINIBROWSER=ON \
+        -DUSE_SOUP2=ON \
+        -DENABLE_JOURNALD_LOG=OFF \
+        -DENABLE_BUBBLEWRAP_SANDBOX=off \
         -Wno-dev \
         -G Ninja \
         ..
-ninja $JOBS || ninja
-DESTDIR=$PKG ninja -j1 install
+        
+# The build might crash on high specs machines because ninja eat all
+# of the resources, so let's try to limit it to half the available ones
+"${NINJA:=ninja}" -j$(expr $(nproc) / 2)
+DESTDIR=$PKG $NINJA -j1 install
 
-find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
-  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+mkdir -p $PKG/usr/share/gtk-doc/html/webkit{2,dom}gtk-4.0
+install -m 0644 ../Documentation/webkit2gtk-4.0/html/* \
+  $PKG/usr/share/gtk-doc/html/webkit2gtk-4.0
+install -m 0644 ../Documentation/webkitdomgtk-4.0/html/* \
+  $PKG/usr/share/gtk-doc/html/webkitdomgtk-4.0
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a ../NEWS $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
-mkdir -p $PKG/usr/share/gtk-doc/html/webkit{2,dom}gtk-4.0
-install -m 0644 Documentation/webkit2gtk-4.0/html/* \
-  $PKG/usr/share/gtk-doc/html/webkit2gtk-4.0
-install -m 0644 Documentation/webkitdomgtk-4.0/html/* \
-  $PKG/usr/share/gtk-doc/html/webkitdomgtk-4.0
-
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
