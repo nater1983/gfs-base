@@ -141,20 +141,7 @@ for d in examples; do
 done
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: rabbitmq-c (an AMQP client library for the RabbitMQ broker)
-$PRGNAM:
-$PRGNAM: The rabbitmq-c Package is an Advanced Message Queuing Protocol (AMQP)
-$PRGNAM: C-Client Library for use with v2.0+ of the RabbitMQ broker.
-$PRGNAM:
-$PRGNAM: License:  MIT
-$PRGNAM: Homepage: https://github.com/alanxz/rabbitmq-c/releases
-$PRGNAM:
-$PRGNAM: See: http://www.rabbitmq.com/ for info on the RabbitMQ message broker.
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
