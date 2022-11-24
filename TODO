@@ -186,7 +186,7 @@ libwpe
 libzapojit
 lttng-ust
 lua
-lua53
+lua53									DONE
 luajit
 luasocket
 lxml
