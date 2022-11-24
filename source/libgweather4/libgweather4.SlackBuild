@@ -1,11 +1,10 @@
 #!/bin/sh
 
-# Slackware build script for libgweather
+# Slackware build script for libgweather4
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
 # Based on Gentoo ebuild script.
-# https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-libs/libgweather/libgweather-40.0.ebuild
-# Patches from Gentoo Linux. (Thanks so much!)
+# Modified & renamed 2022 by Jay Lanagan (j@lngn.net), Detroit, MI, USA for GFS.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -25,10 +24,13 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://download.gnome.org/sources/libgweather/40/libgweather-40.0.tar.xz
+cd $(dirname $0) ; CWD=$(pwd)
 
-PRGNAM=libgweather
-VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
+wget -c --no-check-certificate https://download.gnome.org/sources/libgweather/4.2/libgweather-4.2.0.tar.xz
+
+SRCNAM=libgweather
+PKGNAM=libgweather4
+VERSION=${VERSION:-$(echo $SRCNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
 
@@ -42,9 +44,9 @@ fi
 
 CWD=$(pwd)
 TMP=${TMP:-/tmp/gfs}
-PKG=$TMP/pkg-$PRGNAM
+PKG=$TMP/package-$PKGNAM
 OUTPUT=${OUTPUT:-/tmp}
-JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
+JOBS=${JOBS:-"-j$(expr $(nproc) + 1)"}
 
 if [ "$ARCH" = "i486" ]; then
   SLKCFLAGS="-O2 -march=i486 -mtune=i686"
@@ -55,6 +57,9 @@ elif [ "$ARCH" = "i686" ]; then
 elif [ "$ARCH" = "x86_64" ]; then
   SLKCFLAGS="-O2 -fPIC"
   LIBDIRSUFFIX="64"
+elif [ "$ARCH" = "aarch64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+  LIBDIRSUFFIX="64"  
 else
   SLKCFLAGS="-O2"
   LIBDIRSUFFIX=""
@@ -65,9 +70,9 @@ set -e
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $PRGNAM-$VERSION*
-tar xfv $CWD/$PRGNAM-$VERSION.tar.*
-cd $PRGNAM-$VERSION
+rm -rf $SRCNAM-$VERSION*
+tar xfv $CWD/$SRCNAM-$VERSION.tar.?z
+cd $SRCNAM-$VERSION
 
 chown -R root:root .
 find -L . \
@@ -76,25 +81,20 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-patch -p1 -i $CWD/40.0-autoskip-network-test.patch
-patch -p1 -i $CWD/40.0-meson-tweaks.patch
-patch -p1 -i $CWD/40.0-tests-locale.patch
-
 mkdir -p build
 cd build
 
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-meson .. \
+meson setup .. \
  --prefix=/usr \
  --libdir=/usr/lib${LIBDIRSUFFIX} \
  --sysconfdir=/etc \
  --localstatedir=/var \
  --mandir=/usr/man \
  -Dzoneinfo_dir=/usr/share/zoneinfo \
- -Dglade_catalog=true \
- -Denable_vala=true \
- -Dgtk_doc=true
+ -Dtests=false \
+ -Dgtk_doc=false
 
 ninja $JOBS || ninja
 DESTDIR=$PKG ninja install
@@ -103,14 +103,14 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 cd ..
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a AUTHORS COPYING HACKING.md NEWS README.md \
-  $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
+mkdir -p $PKG/usr/doc/$PKGNAM-$VERSION
+cp -a *.md NEWS \
+  $PKG/usr/doc/$PKGNAM-$VERSION
+cat $CWD/$(basename $0) > $PKG/usr/doc/$PKGNAM-$VERSION/$(basename $0)
 
 mkdir -p $PKG/install
 cp $CWD/slack-desc $PKG/install
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PKGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
 

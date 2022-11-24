@@ -152,7 +152,7 @@ libglib-testing
 libgnomekbd								DONE
 libgrss									DONE
 libgusb									DONE
-libgweather								DONE
+libgweather4								? DONE who marked as done? was broken, fixed and renamed -j
 libgxps
 libhandy
 libiptcdata
