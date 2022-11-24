@@ -142,9 +142,9 @@ libaccounts-glib
 libcacard
 libchamplain								DONE
 libcloudproviders							DONE
-libdaemon
+libdaemon									DONE
 libdazzle
-libdmapsharing3
+libdmapsharing3									DONE
 libgdata
 libgit2
 libgit2-glib
