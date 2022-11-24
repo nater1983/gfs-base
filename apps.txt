@@ -1,9 +1,3 @@
-*mutter	
-*orca
-*p7zip
-*pytz
-*rabbitmq-c
-*rabbitmq-server
 *retro-gtk
 *seahorse
 *simple-scan
