@@ -1,57 +1,9 @@
-*gdm									DONE
-*gnome-boxes								DONE
-*gedit									DONE
-*gnome-control-center							DONE
-*gnome-disk-utility							DONE
-*gnome-font-viewer							DONE
-*gnome-games								DONE
-*gnome-initial-setup							DONE
-*gnome-maps								DONE
-*gnome-music								DONE
-*gnome-nettool								DONE
-*gnome-online-accounts							DONE
-*gnome-panel								DONE
-*gnome-photos								DONE
-*gnome-remote-desktop							DONE
-*gnome-screenshot							DONE
-*gnome-session								DONE
-*gnome-shell								DONE
-*gnome-shell-extensions							DONE
-*gnome-system-monitor							DONE
-*gnome-terminal								DONE
-*gnome-tour								DONE
-*gnome-tweaks								DONE
-*gnome-user-docs							DONE
-*gnome-user-share							DONE
-*gnome-video-effects							DONE
-*gnome-weather								DONE
-*gnome-browser-connector						DONE
-*gnome-builder								DONE
-*gnome-calculator							DONE
-*gnome-calendar								DONE
-*gnome-characters							DONE
-*gnome-clocks								DONE
-*gnome-color-manager							DONE
-*gnome-contacts								DONE
-*Vulkan-Tools								DONE
-*apparmor								DONE
-*brasero								DONE
-*cheese									DONE
-*chrome-gnome-shell							DONE
-*clutter-gtk
-*eog									DONE
-*epiphany
-*evince
-*evolution
-*evolution-data-server
-*file-roller
 *flatpak
 *gsound
 *gtk-frdp
 *gtk-vnc
 *metacity
-*mutter
-*nautilus								DONE
+*mutter	
 *orca
 *p7zip
 *pytz

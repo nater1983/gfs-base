@@ -47,10 +47,10 @@ eog									DONE
 epiphany								DONE
 erlang-otp								DONE
 evince
-evolution
-evolution-data-server
+evolution								DONE
+evolution-data-server							DONE
 exempi
-file-roller
+file-roller								DONE
 flake8
 flatpak									DONE
 flatpak-builder
