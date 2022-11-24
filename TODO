@@ -156,7 +156,7 @@ libgweather4								? DONE who marked as done? was broken, fixed and renamed -j
 libgxps									DONE
 libhandy								DONE
 libiptcdata
-libiscsi
+libiscsi								DONE
 libisoburn
 libisofs
 libjte

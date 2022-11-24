@@ -4,6 +4,7 @@
 
 # Copyright 2019 Wayne Cuddy USA
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modifications by Jay Lanagan (j@lngn.net) for GFS 2022
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -31,6 +32,8 @@
 #   initial release
 #
 
+wget -c --no-check-certificate https://github.com/sahlberg/libiscsi/archive/1.19.0/libiscsi-1.19.0.tar.gz
+
 PRGNAM=$(basename $0 | cut -f1 -d.)
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
@@ -48,7 +51,7 @@ CWD=$(pwd)
 TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/pkg-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
-JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
+JOBS=${JOBS:-"-j$(expr $(nproc) + 1)"}
 
 if [ "$ARCH" = "i586" ]; then
   SLKCFLAGS="-O2 -march=i586 -mtune=i686"
@@ -59,6 +62,9 @@ elif [ "$ARCH" = "i686" ]; then
 elif [ "$ARCH" = "x86_64" ]; then
   SLKCFLAGS="-O2 -fPIC"
   LIBDIRSUFFIX="64"
+elif [ "$ARCH" = "aarch64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+  LIBDIRSUFFIX="64"  
 else
   SLKCFLAGS="-O2"
   LIBDIRSUFFIX=""
@@ -68,31 +74,6 @@ set -e
 
 UMASKBKP=$(umask)
 umask 0022
-
-DEPCHK=""
-OPTDEP=""
-
-if [ -z $VERSION ]
- then
- VERSION=1.19.0
-fi
-
-MDSCHK=fe0c0c7b677f3b6fbe535e758838ccf2
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://github.com/sahlberg/libiscsi/archive/$VERSION/libiscsi-$VERSION.tar.gz"}
-
-if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo $PRGNAM-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $PRGNAM-$VERSION.tar.?z*
-   $DWNLCMD $SRCDOWN
- fi
-fi
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -135,29 +116,12 @@ for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; r
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a \
-  COPYING \
-  README \
-  TODO \
-  LICENCE-GPL-2.txt \
-  LICENCE-LGPL-2.1.txt \
+  COPYING README TODO LICENCE-GPL-2.txt LICENCE-LGPL-2.1.txt \
   $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: libiscsi (client-side library)
-$PRGNAM:
-$PRGNAM: Libiscsi is a client-side library to implement the iSCSI protocol
-$PRGNAM: that can be used to access the resources of an iSCSI target.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://github.com/sahlberg/libiscsi
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
