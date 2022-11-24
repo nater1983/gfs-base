@@ -22,6 +22,8 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+https://gitlab.gnome.org/GNOME/libdmapsharing/-/archive/LIBDMAPSHARING_3_9_10/libdmapsharing-LIBDMAPSHARING_3_9_10.tar.gz
+
 cd $(dirname $0) ; CWD=$(pwd)
 
 PRGNAM=libdmapsharing
