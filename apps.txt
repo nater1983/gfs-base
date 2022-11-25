@@ -1,7 +1,3 @@
-*yelp
-*yelp-xsl
 *xen
-*gspell
-*yelp-tools
 *zenity
 *valgrind
