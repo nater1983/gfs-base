@@ -279,7 +279,7 @@ typogrify
 uhttpmock
 uncrustify
 usbredir
-valgrind
+valgrind								DONE
 vinagre
 vulkan-sdk-bin
 webkit2gtk								DONE
