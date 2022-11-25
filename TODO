@@ -240,12 +240,12 @@ pytz									Current already has it
 rabbitmq-c								DONE
 rabbitmq-server								DONE
 rest
-retro-gtk
+retro-gtk								DONE
 rygel
 sanlock
-seahorse
+seahorse								DONE
 setuptools-scm
-simple-scan
+simple-scan								DONE
 smartypants
 snappy
 snowballstemmer
@@ -257,17 +257,17 @@ sphinxcontrib-htmlhelp							Current already has it
 sphinxcontrib-jsmath							Current already has it
 sphinxcontrib-qthelp							Current already has it
 sphinxcontrib-serializinghtml						Current already has it
-spice
-spice-gtk
+spice									DONE
+spice-gtk								DONE
 spice-protocol
-sushi
+sushi									DONE
 sysprof
 telepathy-glib
 telepathy-mission-control
 template-glib
 template.SlackBuild*
 tepl
-totem
+totem									DONE
 totem-pl-parser
 tracker-miners2
 tracker-miners3
