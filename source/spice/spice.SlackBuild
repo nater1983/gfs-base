@@ -5,6 +5,7 @@
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
 # All rights reserved.
 #
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
 #
@@ -67,10 +68,10 @@ OPTDEP="libcacard"
 
 if [ -z $VERSION ]
  then
- VERSION=0.15.0
+ VERSION=0.15.1
 fi
 
-MDSCHK=840c5284ebc78c15fc7c3a146931bc01
+MDSCHK=3dca2a2d124eac74f3be01ca023ecfa3
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://www.spice-space.org/download/releases/spice-server/spice-$VERSION.tar.bz2"}
 
@@ -134,23 +135,9 @@ cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM: spice (remote computing solution)
-$PRGNAM:
-$PRGNAM: Spice is an open remote computing solution, providing client access
-$PRGNAM: to remote machine display and devices (e.g., keyboard, mouse, audio).
-$PRGNAM: Spice achieves a user experience similar to an interaction with a
-$PRGNAM: local machine, while trying to offload most of the intensive CPU and
-$PRGNAM: GPU tasks to the client. Spice is suitable for both LAN and WAN usage,
-$PRGNAM: without compromising on the user experience.
-$PRGNAM:
-$PRGNAM: https://www.spice-space.org
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
 
 umask ${UMASKBKP}
-
