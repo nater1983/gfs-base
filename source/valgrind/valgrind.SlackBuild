@@ -5,6 +5,7 @@
 # Updated by Peter Wang <novalazy@gmail.com>
 # Maintained by Willy Sudiarto Raharjo <willysr@slackbuilds.org>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021) based on Gentoo ebuild script:
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022) based on Gentoo ebuild script:
 # https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-util/valgrind/valgrind-3.17.0.ebuild
 # Thanks everyone!!
 # All rights reserved.
@@ -26,7 +27,7 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate http://sourceware.org/pub/valgrind/valgrind-3.17.0.tar.bz2
+wget -c --no-check-certificate http://sourceware.org/pub/valgrind/valgrind-3.20.0.tar.bz2
 
 PRGNAM=valgrind
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
@@ -79,15 +80,17 @@ find -L . \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
 # Correct hard coded doc location
-sed -i -e "s:doc/valgrind:doc/${PF}:" docs/Makefile.am || false
+sed -i -e "s:doc/valgrind:doc/${PF}:" docs/Makefile.am || exit 1 
 
 # Don't force multiarch stuff on OSX, bug #306467
-sed -i -e 's:-arch \(i386\|x86_64\)::g' Makefile.all.am || false
+sed -i -e 's:-arch \(i386\|x86_64\)::g' Makefile.all.am || exit 1 
 
 # Respect CFLAGS, LDFLAGS
-patch -p1 -i $CWD/valgrind-3.7.0-respect-flags.patch || false
+zcat $CWD/valgrind-3.7.0-respect-flags.patch.gz | patch -p1 || exit 
 
 #patch -p1 -i $CWD/valgrind-3.15.0-Build-ldst_multiple-test-with-fno-pie.patch || false
+
+zcat $CWD/valgrind-3.20.0-tests-clang16.patch.gz | patch -p1 || exit
 
 autoreconf -vif
 
