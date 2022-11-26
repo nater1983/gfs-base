@@ -1,10 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 # Slackware build script for GSSDP
 
 # Copyright 2010 by Giovanne Castro, Campinas, Sao Paulo, Brazil <giovannefc@ig.com.br>
 # Copyright 2016-2021 Willy Sudiarto Raharjo <willysr@slackbuilds.org>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Copyright 2022 Nathaniel Russell <naterussell83@gmail.com> Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -24,10 +25,15 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
-VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
+wget -c --no-check-certificate https://download.gnome.org/sources/gssdp/1.6/gssdp-1.6.2.tar.xz
+
+cd $(dirname $0) ; CWD=$(pwd)
+
+PRGNAM=gssdp
+VERSION=${VERSION:-1.6.2}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -36,8 +42,11 @@ if [ -z "$ARCH" ]; then
        *) ARCH=$( uname -m ) ;;
   esac
 fi
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
 
-CWD=$(pwd)
 TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/pkg-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
@@ -58,34 +67,6 @@ else
 fi
 
 set -e
-
-UMASKBKP=$(umask)
-umask 0022
-
-DEPCHK=""
-OPTDEP=""
-
-if [ -z $VERSION ]
- then
- VERSION=1.2.3
-fi
-
-MDSCHK=ef3295a965c06ce0f683522391fbb910
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | cut -f1,2 -d.)/$PRGNAM-$VERSION.tar.xz"}
-
-if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo $PRGNAM-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $PRGNAM-$VERSION.tar.?z*
-   $DWNLCMD $SRCDOWN
- fi
-fi
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -128,27 +109,11 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a AUTHORS COPYING NEWS README $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a AUTHORS COPYING NEWS $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: gssdp (GObject-based API for handling resource of SSDP)
-$PRGNAM:
-$PRGNAM: GSSDP is a GObject-based API for handling resource discovery and
-$PRGNAM: announcement over SSDP.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: http://gupnp.org/
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
-
-umask ${UMASKBKP}
-
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
