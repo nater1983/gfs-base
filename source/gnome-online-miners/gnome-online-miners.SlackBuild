@@ -26,7 +26,7 @@ wget -c --no-check-certificate https://download.gnome.org/sources/gnome-online-m
 
 cd $(dirname $0) ; CWD=$(pwd)
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
+PRGNAM=gnome-online-miners
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
