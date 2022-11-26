@@ -110,11 +110,11 @@ gnome-video-effects							DONE
 gnome-weather								DONE
 gnote
 gom
-grilo
-grilo-plugins
+grilo								DONE
+grilo-plugins								DONE
 gsound									DONE
 gspell									DONE
-gssdp
+gssdp								DONE
 gst-editing-services
 gst-plugins-bad
 gtest
