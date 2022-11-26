@@ -27,8 +27,11 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+wget -c --no-check-certificate https://github.com/FreeRDP/FreeRDP/archive/2.9.0/FreeRDP-2.9.0.tar.gz
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
+cd $(dirname $0) ; CWD=$(pwd)
+
+PRGNAM=freerdp
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
@@ -41,7 +44,11 @@ if [ -z "$ARCH" ]; then
   esac
 fi
 
-CWD=$(pwd)
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
+
 TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
@@ -68,34 +75,6 @@ case "$USE_FFMPEG" in
 esac
 
 set -e
-
-UMASKBKP=$(umask)
-umask 0022
-
-DEPCHK=""
-OPTDEP=""
-
-if [ -z $VERSION ]
- then
- VERSION=2.3.2
-fi
-
-MDSCHK=5469a6fff336e34adbe0009867f43e32
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://github.com/FreeRDP/FreeRDP/archive/$VERSION/FreeRDP-$VERSION.tar.gz"}
-
-if [ -z $(find . -maxdepth 1 -name "FreeRDP-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo FreeRDP-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $PRGNAM-$VERSION.tar.?z*
-   $DWNLCMD $SRCDOWN
- fi
-fi
 
 DIRNAME=FreeRDP-$VERSION
 
