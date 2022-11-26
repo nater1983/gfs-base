@@ -6,8 +6,14 @@
 # customary to leave one space after the ':' except on otherwise blank lines.
 
              |-----handy-ruler------------------------------------------------------|
-grilo-plugins: Grilo
+grilo-plugins: grilo-plugins
+grilo-plugins:
+grilo-plugins:
 grilo-plugins:
 grilo-plugins: It is a collection of plugins for Grilo implementing Grilo's API for
 grilo-plugins: various multimedia content providers.
+grilo-plugins:
+grilo-plugins:
+grilo-plugins:
+grilo-plugins: https://wiki.gnome.org/Projects/Grilo
 grilo-plugins:
