@@ -53,11 +53,11 @@ exempi								DONE
 file-roller								DONE
 flake8
 flatpak									DONE
-flatpak-builder
-folks
-freerdp
+flatpak-builder								DONE
+folks								DONE
+freerdp								DONE
 funcsigs
-gcab
+gcab								DONE
 gdm									Need to check file's I left the ones from GFS (Original) and updated Slackbuild
 gedit									DONE
 geoclue2								DONE
@@ -100,7 +100,7 @@ gnome-session								DONE
 gnome-settings-daemon							DONE
 gnome-shell								DONE
 gnome-shell-extensions							DONE
-gnome-system-monitor
+gnome-system-monitor								DONE
 gnome-terminal								DONE
 gnome-tour								DONE
 gnome-tweaks								DONE
