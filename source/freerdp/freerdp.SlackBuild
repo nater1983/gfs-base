@@ -27,7 +27,7 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://github.com/FreeRDP/FreeRDP/archive/2.9.0/FreeRDP-2.9.0.tar.gz
+wget -c --no-check-certificate https://pub.freerdp.com/releases/freerdp-2.9.0.tar.gz
 
 cd $(dirname $0) ; CWD=$(pwd)
 
