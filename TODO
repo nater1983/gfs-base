@@ -108,16 +108,16 @@ gnome-user-docs								DONE
 gnome-user-share							DONE
 gnome-video-effects							DONE
 gnome-weather								DONE
-gnote
+gnote								DONE
 gom								DONE
 grilo								DONE
 grilo-plugins								DONE
 gsound									DONE
 gspell									DONE
 gssdp								DONE
-gst-editing-services
-gst-plugins-bad
-gtest
+gst-editing-services								DONE
+gst-plugins-bad								DONE
+gtest								DONE
 gtk-frdp								DONE
 gtk-vnc									DONE
 gtk4									DONE
