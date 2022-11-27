@@ -124,9 +124,9 @@ gtk4									DONE
 gtksourceview4								DONE
 gtksourceview5								DONE
 gtkspell3
-gupnp
-gupnp-av
-gupnp-dlna
+gupnp								DONE
+gupnp-av								DONE
+gupnp-dlna								DONE
 highlight								DONE
 html5lib
 hyperlink
