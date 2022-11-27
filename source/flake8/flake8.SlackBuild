@@ -5,6 +5,7 @@
 # Copyright 2014-2017  Dimitris Zlatanidis  Orestiada, Greece
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
 # All rights reserved.
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -23,7 +24,7 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://pypi.python.org/packages/1e/ab/7730f6d6cdf73a3b7f98a2fe3b2cdf68e9e760a4a133e083607497d4c3a6/flake8-3.5.0.tar.gz
+wget -c --no-check-certificate https://files.pythonhosted.org/packages/66/53/3ad4a3b74d609b3b9008a10075c40e7c8909eae60af53623c3888f7a529a/flake8-6.0.0.tar.gz 
 
 PRGNAM=flake8
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
@@ -74,8 +75,9 @@ find -L . \
 
 # Ignores setuptools version, it works for me
 sed -i "s/setuptools >= 30\",/\"/" setup.py
+sed -i -e 's/,<[0-9=.]*//' setup.cfg
+sed -i '/error/a \    ignore:Creating a LegacyVersion has been deprecated and will be removed in the next major release:DeprecationWarning' pytest.ini
 
-python2 setup.py install --root=$PKG
 python3 setup.py install --root=$PKG
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
