@@ -32,14 +32,14 @@ clutter-gtk								DONE
 cogl									DONE
 colord									DONE
 colord-gtk								DONE
-constantly
+constantly								UP to Date
 cssselect								DONE
 cunit									Up to Date
 cups-pk-helper								DONE
 cython									DONE
-dbus-test-runner								DONE
-devhelp								DONE
-dog								DONE
+dbus-test-runner							DONE
+devhelp									DONE
+dog									DONE
 dpdk									DONE
 elixir									DONE
 enchant2								DONE
@@ -49,15 +49,15 @@ erlang-otp								DONE
 evince									DONE
 evolution								DONE
 evolution-data-server							DONE
-exempi								DONE
+exempi									DONE
 file-roller								DONE
-flake8
+flake8									DONE	
 flatpak									DONE
 flatpak-builder								DONE
-folks								DONE
-freerdp								DONE
-funcsigs
-gcab								DONE
+folks									DONE
+freerdp									DONE
+funcsigs								Up to Date	
+gcab									DONE
 gdm									Need to check file's I left the ones from GFS (Original) and updated Slackbuild
 gedit									DONE
 geoclue2								DONE
@@ -100,7 +100,7 @@ gnome-session								DONE
 gnome-settings-daemon							DONE
 gnome-shell								DONE
 gnome-shell-extensions							DONE
-gnome-system-monitor								DONE
+gnome-system-monitor							DONE
 gnome-terminal								DONE
 gnome-tour								DONE
 gnome-tweaks								DONE
@@ -108,23 +108,23 @@ gnome-user-docs								DONE
 gnome-user-share							DONE
 gnome-video-effects							DONE
 gnome-weather								DONE
-gnote								DONE
-gom								DONE
-grilo								DONE
+gnote									DONE
+gom									DONE
+grilo									DONE
 grilo-plugins								DONE
 gsound									DONE
 gspell									DONE
-gssdp								DONE
-gst-editing-services								DONE
+gssdp									DONE
+gst-editing-services							DONE
 gst-plugins-bad								DONE
-gtest								DONE
+gtest									DONE
 gtk-frdp								DONE
 gtk-vnc									DONE
 gtk4									DONE
 gtksourceview4								DONE
 gtksourceview5								DONE
-gtkspell3
-gupnp								DONE
+gtkspell3								Up to Date		
+gupnp									DONE
 gupnp-av								DONE
 gupnp-dlna								DONE
 highlight								DONE
