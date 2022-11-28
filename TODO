@@ -51,7 +51,7 @@ evolution								DONE
 evolution-data-server							DONE
 exempi								DONE
 file-roller								DONE
-flake8
+flake8								DONE
 flatpak									DONE
 flatpak-builder								DONE
 folks								DONE
@@ -123,7 +123,7 @@ gtk-vnc									DONE
 gtk4									DONE
 gtksourceview4								DONE
 gtksourceview5								DONE
-gtkspell3
+gtkspell3								DONE
 gupnp								DONE
 gupnp-av								DONE
 gupnp-dlna								DONE
