@@ -51,11 +51,7 @@ evolution								DONE
 evolution-data-server							DONE
 exempi									DONE
 file-roller								DONE
-<<<<<<< HEAD
-flake8									DONE	
-=======
-flake8								DONE
->>>>>>> 4f02c6e1cc8bba8e2c036647058a3c69d3e3f6bf
+flake8									DONE
 flatpak									DONE
 flatpak-builder								DONE
 folks									DONE
@@ -127,13 +123,9 @@ gtk-vnc									DONE
 gtk4									DONE
 gtksourceview4								DONE
 gtksourceview5								DONE
-<<<<<<< HEAD
 gtkspell3								Up to Date		
 gupnp									DONE
-=======
 gtkspell3								DONE
-gupnp								DONE
->>>>>>> 4f02c6e1cc8bba8e2c036647058a3c69d3e3f6bf
 gupnp-av								DONE
 gupnp-dlna								DONE
 highlight								DONE
