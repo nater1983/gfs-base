@@ -153,10 +153,10 @@ libcloudproviders							DONE
 libdaemon								DONE
 libdazzle								DONE
 libdmapsharing3								DONE
-libgdata
-libgit2
-libgit2-glib
-libglib-testing
+libgdata								Up to Date
+libgit2									DONE
+libgit2-glib								DONE
+libglib-testing								DONE
 libgnomekbd								DONE
 libgrss									DONE
 libgusb									DONE
