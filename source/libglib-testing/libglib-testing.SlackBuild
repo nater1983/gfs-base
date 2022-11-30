@@ -4,6 +4,7 @@
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
 # All rights reserved.
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -65,10 +66,10 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=0.1.0
+ VERSION=0.1.1
 fi
 
-MDSCHK=3c6ef6fcc41c185b4b982f0144aa022c
+MDSCHK=873bdc9a25c69f9f7d483ca6da290661
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://gitlab.gnome.org/pwithnall/libglib-testing/-/archive/$VERSION/libglib-testing-$VERSION.tar.gz"}
 
@@ -129,21 +130,7 @@ cp -a COPYING NEWS README \
 cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: libglib-testing
-$PRGNAM:
-$PRGNAM: libglib-testing is a test library providing test harnesses and mock
-$PRGNAM: classes which complement the classes provided by GLib.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://gitlab.gnome.org/pwithnall/libglib-testing
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
