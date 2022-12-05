@@ -172,7 +172,7 @@ liblouis								DONE
 libmanette								DONE
 libmediaart								DONE
 libmusicbrainz5
-liboauth
+liboauth								DONE
 libosinfo
 libovf-glib
 libpeas

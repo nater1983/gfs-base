@@ -17,4 +17,3 @@ liboauth:
 liboauth: liboauth depends on either on the OpenSSL library or on NSS
 liboauth: (Mozilla's Network Security Services), which are used for generating
 liboauth: the hash/signature, and optionally libcurl for issuing HTTP requests.
-liboauth:
