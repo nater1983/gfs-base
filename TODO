@@ -177,7 +177,7 @@ libosinfo								DONE
 libovf-glib
 libpeas									DONE
 libphonenumber							dep on gtest and protobuf. protobuf fails, might need re-write, I'll come back to it. Does anyone know what these are deps for? gnome-contacts?
-libportal
+libportal								DONE
 libpst
 libquvi
 libquvi-scripts
