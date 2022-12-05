@@ -175,7 +175,7 @@ libmusicbrainz5
 liboauth								DONE
 libosinfo								DONE
 libovf-glib
-libpeas
+libpeas									DONE
 libphonenumber
 libportal
 libpst
