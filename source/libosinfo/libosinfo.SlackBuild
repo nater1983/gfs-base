@@ -1,9 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 # Slackware build script for libosinfo
 
 # Copyright 2014-2021 Matteo Bernardini <ponce@slackbuilds.org>, Pisa, Italy
-# Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,12 +22,15 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://releases.pagure.org/libosinfo/libosinfo-1.9.0.tar.xz
+wget -c https://releases.pagure.org/libosinfo/libosinfo-1.10.0.tar.xz
+
+cd $(dirname $0) ; CWD=$(pwd)
 
 PRGNAM=libosinfo
-VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
+VERSION=${VERSION:-1.10.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -38,11 +40,17 @@ if [ -z "$ARCH" ]; then
   esac
 fi
 
-CWD=$(pwd)
+# If the variable PRINT_PACKAGE_NAME is set, then this script will report what
+# the name of the created package would be, and then exit. This information
+# could be useful to other scripts.
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
+
 TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
-JOBS=${JOBS:-$(echo -j"$(getconf _NPROCESSORS_ONLN)")}
 
 if [ "$ARCH" = "i586" ]; then
   SLKCFLAGS="-O2 -march=i586 -mtune=i686"
@@ -53,12 +61,15 @@ elif [ "$ARCH" = "i686" ]; then
 elif [ "$ARCH" = "x86_64" ]; then
   SLKCFLAGS="-O2 -fPIC"
   LIBDIRSUFFIX="64"
+elif [ "$ARCH" = "aarch64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+  LIBDIRSUFFIX="64"
 else
   SLKCFLAGS="-O2"
   LIBDIRSUFFIX=""
 fi
 
-DOCS="AUTHORS* CONTRIBUTING.md COPYING* ChangeLog MAINTAINERS NEWS README"
+DOCS="AUTHORS COPYING* ChangeLog NEWS README"
 
 set -e
 
@@ -75,29 +86,23 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
  -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-mkdir -p build
+mkdir build
 cd build
-
-CFLAGS="$SLKCFLAGS" \
-CXXFLAGS="$SLKCFLAGS" \
-meson .. \
- --buildtype=release \
- --infodir=/usr/info \
- --libdir=/usr/lib${LIBDIRSUFFIX} \
- --localstatedir=/var \
- --mandir=/usr/man \
- --prefix=/usr \
- --sysconfdir=/etc \
- -Ddefault_library=shared \
- -Denable-gtk-doc=true \
- -Denable-introspection=enabled \
- -Denable-tests=true \
- -Denable-vala=enabled \
- -Dwith-usb-ids-path=/usr/share/hwdata/usb.ids \
- -Dwith-pci-ids-path=/usr/share/hwdata/pci.ids
-
-ninja $JOBS || ninja
-DESTDIR=$PKG ninja install
+  CFLAGS="$SLKCFLAGS" \
+  CXXFLAGS="$SLKCFLAGS" \
+  meson setup .. \
+    --buildtype=release \
+    --infodir=/usr/info \
+    --libdir=/usr/lib${LIBDIRSUFFIX} \
+    --localstatedir=/var \
+    --mandir=/usr/man \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    -D with-usb-ids-path=/usr/share/hwdata/usb.ids \
+    -D with-pci-ids-path=/usr/share/hwdata/pci.ids
+  "${NINJA:=ninja}"
+  DESTDIR=$PKG $NINJA install
+cd ..
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
@@ -105,7 +110,6 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
 
-cd ..
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
@@ -114,4 +118,4 @@ mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE

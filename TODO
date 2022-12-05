@@ -170,21 +170,21 @@ libisofs								DONE
 libjte
 liblouis								DONE
 libmanette								DONE
-libmediaart
+libmediaart								DONE
 libmusicbrainz5
-liboauth
-libosinfo
+liboauth								DONE
+libosinfo								DONE
 libovf-glib
-libpeas
-libphonenumber
-libportal
+libpeas									DONE
+libphonenumber							dep on gtest and protobuf. protobuf fails, might need re-write, I'll come back to it. Does anyone know what these are deps for? gnome-contacts?
+libportal								DONE
 libpst
 libquvi
 libquvi-scripts
 librdkafka
 libseccomp
 libsocialweb
-libstemmer
+libstemmer								Appears done? not noted *shrug* -j
 libuchardet
 liburcu
 libvirt

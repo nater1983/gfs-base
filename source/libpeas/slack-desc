@@ -6,8 +6,14 @@
 # customary to leave one space after the ':' except on otherwise blank lines.
 
        |-----handy-ruler------------------------------------------------------|
-libpeas: libpeas
+libpeas: libpeas (GObject Plugin System)
 libpeas:
-libpeas: libpeas is a gobject-based plugins engine, and is targetted at giving
+libpeas: Libpeas is a gobject-based plugins engine, and is targetted at giving
 libpeas: every application the chance to assume its own extensibility.
+libpeas: It also has a set of features including, but not limited to:
+libpeas: - multiple extension points
+libpeas: - on demand (lazy) programming language support for C, Python and JS
+libpeas: - simplicity of the API
+libpeas:
+libpeas: Homepage: https://wiki.gnome.org/Projects/Libpeas
 libpeas:
