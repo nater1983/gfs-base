@@ -219,6 +219,8 @@ esac
 
 PKGBUILD=(
 # Libraries and Desktop
+libnma-gtk4
+vte-gtk4
 libstemmer
 exempi
 libgxps
