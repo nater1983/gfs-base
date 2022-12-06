@@ -219,6 +219,8 @@ esac
 
 PKGBUILD=(
 # Libraries and Desktop
+libnma-gtk4
+vte-gtk4
 libstemmer
 exempi
 libgxps
@@ -296,6 +298,7 @@ libdmapsharing3
 geoclue2
 xdg-dbus-proxy
 webkit2gtk
+webkit2gtk4.1
 yelp-xsl
 yelp
 yelp-tools
@@ -372,7 +375,7 @@ ytnef
 libjte
 libisofs
 libisoburn
-ostree
+libostree
 libglib-testing
 # malcontent is(?) a optional dep for flatpak
 # and flatpak is required to build malcontent (wtf?!)
