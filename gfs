@@ -374,7 +374,7 @@ ytnef
 libjte
 libisofs
 libisoburn
-ostree
+libostree
 libglib-testing
 # malcontent is(?) a optional dep for flatpak
 # and flatpak is required to build malcontent (wtf?!)
