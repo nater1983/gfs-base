@@ -298,6 +298,7 @@ libdmapsharing3
 geoclue2
 xdg-dbus-proxy
 webkit2gtk
+webkit2gtk4.1
 yelp-xsl
 yelp
 yelp-tools
