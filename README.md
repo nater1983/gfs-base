@@ -15,11 +15,11 @@
 ### Download and Install Compiled Packages
 1. Download using this command:
 ```bash
-lftp -c mirror "http://slackware.uk/gfs/gfs-42.6/pkg64" -c gfs-42.6-pkg64
+lftp -c mirror "http://slackware.uk/gfs/gfs-42.7/pkg64" -c gfs-42.7-pkg64
 ```
 2. As root, install:
 ```bash
-upgradepkg --install-new --reinstall gfs-42.6-pkg64/*.txz
+upgradepkg --install-new --reinstall gfs-42.7-pkg64/*.txz
 ```
 
 ### Configuring
