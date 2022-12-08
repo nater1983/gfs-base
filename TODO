@@ -51,11 +51,7 @@ evolution								DONE
 evolution-data-server							DONE
 exempi									DONE
 file-roller								DONE
-<<<<<<< HEAD
 flake8									DONE
-=======
-flake8									DONE	
->>>>>>> 9be5902fcc416a8c2ab10f2cf20e19776207ad14
 flatpak									DONE
 flatpak-builder								DONE
 folks									DONE
@@ -129,19 +125,15 @@ gtksourceview4								DONE
 gtksourceview5								DONE
 gtkspell3								Up to Date		
 gupnp									DONE
-<<<<<<< HEAD
-gtkspell3								DONE
-=======
->>>>>>> 9be5902fcc416a8c2ab10f2cf20e19776207ad14
 gupnp-av								DONE
 gupnp-dlna								DONE
 highlight								DONE
-html5lib
-hyperlink
-imagesize
-incremental
+html5lib									DONE
+hyperlink									DONE
+imagesize									DONE
+incremental									DONE
 jam									DONE
-jq
+jq									DONE
 jsonrpc-glib
 lcov
 leveldb
