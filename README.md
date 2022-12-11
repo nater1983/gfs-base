@@ -59,9 +59,8 @@ if [ -x /etc/rc.d/rc.avahidaemon ]; then
 fi
 ```
 4. Edit your `/etc/inittab` to go 4 runlevel ( id:3:initdefault: -> id:4:initdefault: )
-5. Make sure gdm is the first one to run in the `/etc/rc.d/rc.4` (remove the -nodaemon option)
-6. Reboot your system.
-7. Use `xwmconfig` to choose GNOME (or Flashback)
+5. Reboot your system.
+66 Use `xwmconfig` to choose GNOME (or Flashback)
 8. Start using `startx`
 
 ### How to compile and use GNOME 42
