@@ -134,11 +134,11 @@ imagesize									DONE
 incremental									DONE
 jam									DONE
 jq									DONE
-jsonrpc-glib
-lcov
-leveldb
-lgi
-libaccounts-glib
+jsonrpc-glib								DONE
+lcov								DONE
+leveldb								DONE
+lgi								DONE
+libaccounts-glib								DONE
 libcacard
 libchamplain								DONE
 libcloudproviders							DONE
