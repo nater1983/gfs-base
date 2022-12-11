@@ -3,11 +3,34 @@
 # Slackware build script for LevelDB
 # Written by Mário Antunes (mario.antunes@av.it.pt)
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Copyright 2022 Nathaniel Russell <naterussell83@gmail.com> Texas, USA.
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+# EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
+wget -c --no-check-certificate https://src.fedoraproject.org/repo/pkgs/leveldb/leveldb-1.23.tar.gz
+cd $(dirname $0) ; CWD=$(pwd)
+
+PRGNAM=leveldb
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -17,7 +40,11 @@ if [ -z "$ARCH" ]; then
   esac
 fi
 
-CWD=$(pwd)
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
+
 TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/pkg-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
@@ -37,38 +64,7 @@ else
   LIBDIRSUFFIX=""
 fi
 
-# Build with snappy
-SNAPPY=${SNAPPY:-yes}
-
 set -e
-
-UMASKBKP=$(umask)
-umask 0022
-
-DEPCHK=""
-OPTDEP=""
-
-if [ -z $VERSION ]
- then
- VERSION=1.9.0
-fi
-
-MDSCHK=12f11385cb58ae0de66d4bc2cc7f8194
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://src.fedoraproject.org/repo/pkgs/leveldb/leveldb-$VERSION.tar.gz/12f11385cb58ae0de66d4bc2cc7f8194/leveldb-$VERSION.tar.gz"}
-
-if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo $PRGNAM-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $PRGNAM-$VERSION.tar.?z*
-   $DWNLCMD $SRCDOWN
- fi
-fi
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -103,23 +99,7 @@ find $PKG/usr/doc/$PRGNAM-$VERSION -type f -exec chmod 644 {} \;
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: leveldb (Google key-vale database)
-$PRGNAM:
-$PRGNAM: LevelDB is an open source on-disk key-value store written by Google
-$PRGNAM: Fellows Jeffrey Dean and Sanjay Ghemawat, who built parts of Google's
-$PRGNAM: platform. Inspired by BigTable, LevelDB is hosted on Google Code
-$PRGNAM: under the New BSD License and has been ported to a variety of
-$PRGNAM: Unix-based systems, Mac OS X, Windows, and Android. webOS's DB8
-$PRGNAM: database service uses it as a backend.
-$PRGNAM:
-$PRGNAM: https://github.com/google/leveldb
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
-
-umask ${UMASKBKP}
-
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
