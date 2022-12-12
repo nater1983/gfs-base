@@ -159,24 +159,24 @@ libiptcdata								DONE
 libiscsi								DONE
 libisoburn								DONE
 libisofs								DONE
-libjte
+libjte								DONE
 liblouis								DONE
 libmanette								DONE
 libmediaart								DONE
-libmusicbrainz5
+libmusicbrainz5								DONE
 liboauth								DONE
 libosinfo								DONE
-libovf-glib
+libovf-glib								DONE
 libpeas									DONE
 libphonenumber							dep on gtest and protobuf. protobuf fails, might need re-write, I'll come back to it. Does anyone know what these are deps for? gnome-contacts?
 libportal								DONE
-libpst
-libquvi
-libquvi-scripts
-librdkafka
-libseccomp
-libsocialweb
-libstemmer								Appears done? not noted *shrug* -j
+libpst								DONE
+libquvi								DONE
+libquvi-scripts								DONE
+librdkafka								DONE
+libseccomp								DONE
+libsocialweb								DONE
+libstemmer								DONE Please check {{Jay..}}
 libuchardet
 liburcu
 libvirt
