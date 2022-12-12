@@ -68,8 +68,6 @@ else
   LIBDIRSUFFIX=""
 fi
 
-DOCS="AUTHORS COPYING ChangeLog INSTALL NEWS README VERSION"
-
 set -e
 
 rm -rf $PKG
