@@ -7,7 +7,8 @@
 # Modified by Marek Srejma <sam_web@yahoo.de> 2017/05/03
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
 
-wget -c --no-check-certificate https://downloads.sourceforge.net/quvi/libquvi-scripts-0.9.20131130.tar.xz
+#wget -c --no-check-certificate https://downloads.sourceforge.net/quvi/libquvi-scripts-0.9.20131130.tar.xz
+wget -c --no-check-certificate https://sourceforge.net/projects/quvi/files/0.9/libquvi-scripts/libquvi-scripts-0.9.20131130.tar.xz
 
 PRGNAM=libquvi-scripts
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
