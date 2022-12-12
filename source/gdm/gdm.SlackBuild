@@ -1,12 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
-# Slackware build script for gdm
+# Slackware build script for GDM (GNOME Display Manager)
 
-# Copyright 2016, 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
-# Based on Dlackware SlackBuild script (Thanks so much!):
-# https://github.com/Dlackware/gnome/blob/master/core/gdm/gdm.SlackBuild
-# Based on Gentoo ebuild script (Thanks a lot!):
-# https://gitweb.gentoo.org/repo/gentoo.git/tree/gnome-base/gdm/gdm-40.0-r1.ebuild
 # Copyright 2022 Bob Funk Winnipeg, Canada
 # All rights reserved.
 #
@@ -27,27 +22,33 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
-VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
+cd $(dirname $0) ; CWD=$(pwd)
+
+PRGNAM=gdm
+VERSION=${VERSION:-42.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
-    i?86) ARCH=i486 ;;
+    i?86) ARCH=i586 ;;
     arm*) ARCH=arm ;;
        *) ARCH=$( uname -m ) ;;
   esac
 fi
 
-CWD=$(pwd)
-TMP=${TMP:-/tmp/gfs}
-PKG=$TMP/pkg-$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}
-JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
 
-if [ "$ARCH" = "i486" ]; then
-  SLKCFLAGS="-O2 -march=i486 -mtune=i686"
+TMP=${TMP:-/tmp/gfs}
+PKG=$TMP/package-$PRGNAM
+OUTPUT=${OUTPUT:-/tmp}
+
+if [ "$ARCH" = "i586" ]; then
+  SLKCFLAGS="-O2 -march=i586 -mtune=i686"
   LIBDIRSUFFIX=""
 elif [ "$ARCH" = "i686" ]; then
   SLKCFLAGS="-O2 -march=i686 -mtune=i686"
@@ -62,41 +63,12 @@ fi
 
 set -e
 
-UMASKBKP=$(umask)
-umask 0022
-
-DEPCHK=""
-OPTDEP=""
-
-if [ -z $VERSION ]
- then
- VERSION=42.0
-fi
-
-MDSCHK=8fb99fd6032127fe6f57462c696607e5
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://download.gnome.org/sources/$PRGNAM/$(echo $VERSION | cut -f1 -d.)/$PRGNAM-$VERSION.tar.xz"}
-
-if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo $PRGNAM-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $PRGNAM-$VERSION.tar.?z*
-   $DWNLCMD $SRCDOWN
- fi
-fi
-
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xfv $CWD/$PRGNAM-$VERSION.tar.?z*
+tar xvf $CWD/$PRGNAM-$VERSION.tar.?z
 cd $PRGNAM-$VERSION
-
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -114,7 +86,7 @@ mkdir build
 cd build
   CFLAGS="$SLKCFLAGS" \
   CXXFLAGS="$SLKCFLAGS" \
-  meson .. \
+  meson setup ..\
     --buildtype=release \
     --infodir=/usr/info \
     --libdir=/usr/lib${LIBDIRSUFFIX} \
@@ -140,11 +112,13 @@ cd build
 cd ..
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
- | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
-# Here or doinst.sh?
-mkdir -p $PKG/var/lib/gdm $PKG/var/cache/gdm $PKG/var/log/gdm $PKG/run/gdm
-chown -R -v gdm:gdm $PKG/var/lib/gdm $PKG/var/cache/gdm $PKG/var/log/gdm $PKG/run/gdm
+mkdir -p $PKG/etc/pam.d
+cat $CWD/pamd/gdm-autologin > $PKG/etc/pam.d/gdm-autologin
+cat $CWD/pamd/gdm-password > $PKG/etc/pam.d/gdm-password
+cat $CWD/pamd/gdm-launch-environment > $PKG/etc/pam.d/gdm-launch-environment
+cat $CWD/wayland-session > $PKG/etc/gdm/wayland-session
 
 # Install GDM wrapper script:
 mv $PKG/usr/sbin/{gdm,gdm-bin}
@@ -153,22 +127,13 @@ cat $CWD/gdm.wrap > $PKG/usr/sbin/gdm
 # Handle /etc/gdm/custom.conf a little nicer:
 mv $PKG/etc/gdm/{custom.conf,custom.conf.new}
 
-# Dont config for .new
-mkdir -p $PKG/etc/pam.d
-cp $CWD/pamd/gdm-password $PKG/etc/pam.d/gdm-password
-cp $CWD/pamd/gdm-autologin $PKG/etc/pam.d/gdm-autologin
-cp $CWD/pamd/gdm-launch-environment $PKG/etc/pam.d/gdm-launch-environment
-
-mkdir -p $PKG/etc/X11/xinit
-cat $CWD/files/xinitrc.gnome > $PKG/etc/X11/xinit/xinitrc.gnome
-ln -sf /etc/X11/xinit/xinitrc.gnome $PKG/etc/X11/xinit/xinitrc
-
 # pulse is default file or a dir? :(
 mkdir -p $PKG/var/lib/gdm/.config/pulse
 cat $CWD/files/default.pa > $PKG/var/lib/gdm/.config/pulse/default.pa
 
-mkdir -p $PKG/usr/share/xsessions
-cp $CWD/sessions/*.desktop $PKG/usr/share/xsessions
+# gdm logo
+install -Dm 644 $CWD/slackware_whitelogo_med.png -t $PKG/usr/share/pixmaps/
+install -Dm644 $CWD/org.gnome.login-screen.gschema.override -t $PKG/usr/share/glib-2.0/schemas || exit 1
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a \
@@ -177,11 +142,8 @@ cp -a \
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-cp $CWD/slack-desc $PKG/install
-cp $CWD/doinst.sh $PKG/install
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
-
-umask ${UMASKBKP}
-
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
