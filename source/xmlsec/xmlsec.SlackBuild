@@ -1,9 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 
 # Slackware build script for xmlsec
 
-# Copyright 2014-2021 Willy Sudiarto Raharjo <willysr@slackbuilds.org>
-# Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Copyright 2014-2022 Willy Sudiarto Raharjo <willysr@slackbuilds.org>
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,25 +22,36 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
-SRCNAM=${PRGNAM}1
-VERSION=${VERSION:-$(find . -maxdepth 1 -name "$SRCNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
+wget -c --no-check-certificate https://www.aleksey.com/xmlsec/download/xmlsec1-1.2.37.tar.gz
+
+cd $(dirname $0) ; CWD=$(pwd)
+
+PRGNAM=xmlsec
+SRCNAM=xmlsec1
+VERSION=${VERSION:-1.2.37}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
-    i?86) ARCH=i486 ;;
+    i?86) ARCH=i586 ;;
     arm*) ARCH=arm ;;
        *) ARCH=$( uname -m ) ;;
   esac
 fi
 
-CWD=$(pwd)
+# If the variable PRINT_PACKAGE_NAME is set, then this script will report what
+# the name of the created package would be, and then exit. This information
+# could be useful to other scripts.
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
+
 TMP=${TMP:-/tmp/gfs}
-PKG=$TMP/pkg-$PRGNAM
+PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
-JOBS=${JOBS:-" -j$(expr $(getconf _NPROCESSORS_ONLN) \* 2 ) "}
 
 if [ "$ARCH" = "i586" ]; then
   SLKCFLAGS="-O2 -march=i586 -mtune=i686"
@@ -52,40 +62,15 @@ elif [ "$ARCH" = "i686" ]; then
 elif [ "$ARCH" = "x86_64" ]; then
   SLKCFLAGS="-O2 -fPIC"
   LIBDIRSUFFIX="64"
+elif [ "$ARCH" = "aarch64" ]; then
+  SLKCFLAGS="-O2 -fPIC"
+  LIBDIRSUFFIX="64"
 else
   SLKCFLAGS="-O2"
   LIBDIRSUFFIX=""
 fi
 
 set -e
-
-UMASKBKP=$(umask)
-umask 0022
-
-DEPCHK=""
-OPTDEP=""
-
-if [ -z $VERSION ]
- then
- VERSION=1.2.32
-fi
-
-MDSCHK=c9152d5c9b337ce6e3d664b046f5a288
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://www.aleksey.com/xmlsec/download/xmlsec1-1.2.32.tar.gz"}
-
-if [ -z $(find . -maxdepth 1 -name "$SRCNAM-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo $SRCNAM-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $SRCNAM-$VERSION.tar.?z*
-   $DWNLCMD $SRCDOWN
- fi
-fi
 
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
@@ -114,39 +99,23 @@ CXXFLAGS="$SLKCFLAGS" \
   --with-mozilla-ver=/usr \
   --build=$ARCH-slackware-linux
 
-make $JOBS || make
+make
 make install DESTDIR=$PKG
+
+rm -rf $PKG/usr/lib${LIBDIRSUFFIX}/*.la
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
-
-rm -rf $PKG/usr/lib${LIBDIRSUFFIX}/*.la
 
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a AUTHORS COPYING ChangeLog Copyright HACKING INSTALL NEWS README TODO $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a AUTHORS COPYING ChangeLog Copyright HACKING INSTALL NEWS README.md TODO $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: xmlsec (C library based on LibXML2)
-$PRGNAM:
-$PRGNAM: XML Security Library is a C library based on LibXML2.
-$PRGNAM: The library supports major XML security standards:
-$PRGNAM: * XML Signature
-$PRGNAM: * XML Encryption
-$PRGNAM: * Canonical XML
-$PRGNAM: * Exclusive Canonical XML
-$PRGNAM:
-$PRGNAM: Project URL: https://www.aleksey.com/xmlsec/
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
-
-umask ${UMASKBKP}
-
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE

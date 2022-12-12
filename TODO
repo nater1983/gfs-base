@@ -203,7 +203,7 @@ nautilus								DONE
 netcf									DONE BROKEN *see note in dir*
 nspr									DONE
 numactl									DONE
-oath-toolkit
+oath-toolkit								DONE
 openwsman
 orca									DONE
 ostree
@@ -292,7 +292,7 @@ xdg-desktop-portal							Current already has it
 xdg-desktop-portal-gnome						DONE
 xdg-desktop-portal-gtk							DONE
 xen
-xmlsec
+xmlsec									DONE
 yajl
 yelp									DONE
 yelp-tools								DONE
