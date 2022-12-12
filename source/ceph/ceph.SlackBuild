@@ -22,10 +22,15 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
+wget -c --no-check-certificate https://download.ceph.com/tarballs/ceph-17.2.5.tar.gz
+
+cd $(dirname $0) ; CWD=$(pwd)
+
+PRGNAM=ceph
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -35,7 +40,11 @@ if [ -z "$ARCH" ]; then
   esac
 fi
 
-CWD=$(pwd)
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
+
 TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/pkg-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
@@ -59,59 +68,14 @@ else
 fi
 
 set -e
-
-UMASKBKP=$(umask)
-umask 0022
-
-DEPCHK=""
-OPTDEP=""
-
-if [ -z $VERSION ]
- then
- VERSION=16.2.5
-fi
-
-MDSCHK=5616f2d1e534639c248c4d33c59cabab
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://download.ceph.com/tarballs/ceph-$VERSION.tar.gz"}
-
-if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo $PRGNAM-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $PRGNAM-$VERSION.tar.?z*
-   $DWNLCMD $SRCDOWN
- fi
-fi
-
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-echo "Extracting tarball..."
 tar xf $CWD/$PRGNAM-$VERSION.tar.?z*
 cd $PRGNAM-$VERSION
 
 chown -R root:root .
-
-patch -Np1 -i $CWD/patches/ceph-12.2.0-use-provided-cpu-flag-values.patch
-patch -Np1 -i $CWD/patches/ceph-14.2.0-cflags.patch
-patch -Np1 -i $CWD/patches/ceph-12.2.4-boost-build-none-options.patch
-patch -Np1 -i $CWD/patches/ceph-16.2.2-cflags.patch
-patch -Np1 -i $CWD/patches/ceph-16.2.2-no-virtualenvs.patch
-patch -Np1 -i $CWD/patches/ceph-14.2.0-dpdk-cflags.patch
-patch -Np1 -i $CWD/patches/ceph-14.2.0-cython-0.29.patch
-patch -Np1 -i $CWD/patches/ceph-16.2.0-rocksdb-cmake.patch
-patch -Np1 -i $CWD/patches/ceph-15.2.3-spdk-compile.patch
-patch -Np1 -i $CWD/patches/ceph-16.2.0-install-libblk.patch
-patch -Np1 -i $CWD/patches/ceph-16.2.0-spdk-tinfo.patch
-patch -Np1 -i $CWD/patches/ceph-16.2.0-jaeger-system-boost.patch
-patch -Np1 -i $CWD/patches/ceph-16.2.0-liburing.patch
-patch -Np1 -i $CWD/patches/ceph-16.2.2-system-zstd.patch
 
 # remove tests that need root access
 rm -f src/test/cli/ceph-authtool/cap*.t
@@ -183,6 +147,7 @@ DESTDIR=$PKG make install
 pushd src/pybind
 make DESTDIR=$PKG install
 popd
+cd ..
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
@@ -192,52 +157,14 @@ for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; r
 
 find $PKG -name '*.la' -delete
 
-cd ..
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a AUTHORS CONTRIBUTING.rst COPYING* README.md \
   $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: Ceph
-$PRGNAM:
-$PRGNAM: Ceph is a distributed object, block, and file storage platform.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: https://ceph.com/
-$PRGNAM:
-EOT
-
-cat <<\EOT >$PKG/install/doinst.sh
-if [ -x /usr/bin/update-mime-database ]; then
-  /usr/bin/update-mime-database /usr/share/mime &> /dev/null
-fi
-
-if [ -x /usr/bin/update-desktop-database ]; then
-  /usr/bin/update-desktop-database -q usr/share/applications >/dev/null 2>&1
-fi
-
-if [ -e usr/share/icons/hicolor/icon-theme.cache ]; then
-  if [ -x /usr/bin/gtk-update-icon-cache ]; then
-    /usr/bin/gtk-update-icon-cache usr/share/icons/hicolor >/dev/null 2>&1
-  fi
-fi
-
-if [ -e usr/share/glib-2.0/schemas ]; then
-  if [ -x /usr/bin/glib-compile-schemas ]; then
-    /usr/bin/glib-compile-schemas usr/share/glib-2.0/schemas >/dev/null 2>&1
-  fi
-fi
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
-
-umask ${UMASKBKP}
-
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
