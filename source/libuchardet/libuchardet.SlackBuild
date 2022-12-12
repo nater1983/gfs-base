@@ -4,6 +4,7 @@
 #
 # Copyright 2015-2020 Edinaldo P. Silva, Rio de Janeiro, Brazil.
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Copyright 2022 Nathaniel Russell <naterussell83@gmail.com> Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -23,11 +24,16 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
+wget -c --no-check-certificate https://www.freedesktop.org/software/uchardet/releases/uchardet-0.0.8.tar.xz
+
+cd $(dirname $0) ; CWD=$(pwd)
+
+PRGNAM=libuchardet
 SRCNAM=uchardet
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$SRCNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -37,7 +43,11 @@ if [ -z "$ARCH" ]; then
   esac
 fi
 
-CWD=$(pwd)
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
+
 TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
@@ -59,39 +69,11 @@ fi
 
 set -e
 
-UMASKBKP=$(umask)
-umask 0022
-
-DEPCHK=""
-
-if [ -z $VERSION ]
- then
- VERSION=0.0.7
-fi
-
-MDSCHK=623406dac5c5ad89e40eedd7f279efae
-DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://www.freedesktop.org/software/$SRCNAM/releases/$SRCNAM-$VERSION.tar.xz"}
-
-if [ -z $(find . -maxdepth 1 -name "$SRCNAM-$VERSION.tar.?z*") ]
-then
- $DWNLCMD $SRCDOWN
-else
- if md5sum -c <<<"$MDSCHK $(echo $SRCNAM-$VERSION.tar.?z*)";
-  then
-   continue
-  else
-   rm -rf $SRCNAM-$VERSION.tar.?z*
-   $DWNLCMD $SRCDOWN
- fi
-fi
-
-
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $SRCNAM-$VERSION
-tar xvf $CWD/$SRCNAM-$VERSION.tar.xz
+tar xvf $CWD/$SRCNAM-$VERSION.tar.?z
 cd $SRCNAM-$VERSION
 
 chown -R root:root .
@@ -112,6 +94,7 @@ cmake .. \
  -DBUILD_SHARED_LIBS=ON \
  -DBUILD_STATIC=OFF \
  -DCMAKE_BUILD_TYPE=Release
+cd ..
 
 make $JOBS || make
 make install DESTDIR=$PKG
@@ -120,30 +103,17 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mv $PKG/usr/share/man $PKG/usr/man
+rm -rf $PKG/usr/share
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
-rm -rf $PKG/usr/share
 
-cd ..
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a AUTHORS COPYING INSTALL README.md $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a AUTHORS COPYING INSTALL README.md \
+        $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM-SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM: libuchardet (encoding detector library)
-$PRGNAM:
-$PRGNAM: uchardet uchardet is a C language binding of the original C++
-$PRGNAM: implementation of the universal charset detection library by Mozilla.
-$PRGNAM: uchardet is an encoding detector library, which takes a sequence of
-$PRGNAM: bytes in an unknown character encoding without any additional
-$PRGNAM: information, and attempts to determine the encoding of the text.
-$PRGNAM: Returned encoding names are iconv-compatible.
-$PRGNAM:
-$PRGNAM: Home page: https://www.freedesktop.org/wiki/Software/uchardet/
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
