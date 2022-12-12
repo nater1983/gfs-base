@@ -177,28 +177,28 @@ librdkafka								DONE
 libseccomp								DONE
 libsocialweb								DONE
 libstemmer								DONE Please check {{Jay..}}
-libuchardet
-liburcu
-libvirt
-libvirt-glib
-libwnck4
-libwpe
-libzapojit
-lttng-ust
-lua
+libuchardet								DONE
+liburcu								DONE
+libvirt								DONE
+libvirt-glib								DONE
+libwnck4								DONE
+libwpe								DONE
+libzapojit								DONE
+lttng-ust								DONE
+lua								DONE
 lua53									DONE
-luajit
-luasocket
-lxml
-malcontent
-memphis
+luajit								DONE
+luasocket								DONE
+lxml								DONE
+malcontent								DONE
+memphis								DONE
 metacity								DONE
-mistune
-mm-common
-more-itertools
+mistune								DONE
+mm-common								DONE
+more-itertools								DONE
 mutter									DONE
-mypy
-mypy_extensions
+mypy								DONE
+mypy_extensions								DONE
 nautilus								DONE
 netcf
 nspr
