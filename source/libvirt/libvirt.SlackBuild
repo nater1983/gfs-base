@@ -6,14 +6,18 @@
 
 # 20220422 bkw: Modified by SlackBuilds.org, BUILD=2:
 # - strip binaries.
+# Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# modified by 2022 Nathaniel Russell <naterussell83@gmail.com> Texas, USA.
+
+wget -c --no-check-certificate https://libvirt.org/sources/libvirt-8.1.0.tar.xz
 
 cd $(dirname $0) ; CWD=$(pwd)
 
 PRGNAM=libvirt
 VERSION=${VERSION:-8.1.0}
-BUILD=${BUILD:-2}
-TAG=${TAG:-_SBo}
-PKGTYPE=${PKGTYPE:-tgz}
+BUILD=${BUILD:-1}
+TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -28,7 +32,7 @@ if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
   exit 0
 fi
 
-TMP=${TMP:-/tmp/SBo}
+TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
 
