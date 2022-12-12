@@ -6,6 +6,7 @@
 # Based on Gentoo ebuild script:
 # https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-libs/snowball-stemmer/snowball-stemmer-0.20140325.ebuild
 # Thanks so much!!!
+# Copyright 2022 Nathaniel Russell <naterussell83@gmail.com> Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -25,18 +26,16 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://dev.gentoo.org/~graaff/libstemmer_c-20140325.tgz
+wget -c --no-check-certificate https://github.com/snowballstem/snowball/archive/v2.2.0/snowball-2.2.0.tar.gz
+
+cd $(dirname $0) ; CWD=$(pwd)
 
 PRGNAM=libstemmer
-SRCNAM=libstemmer_c
+SRCNAM=snowball
 VERSION=${VERSION:-$(echo $SRCNAM-*.tgz | cut -f 2 -d - | cut -f 1 -d .)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
-TMP=${TMP:-/tmp/gfs}
-PKG=$TMP/pkg-$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}
-CWD=$(pwd)
-JOBS=${JOBS:-$(echo -j"$(getconf _NPROCESSORS_ONLN)")}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -45,6 +44,17 @@ if [ -z "$ARCH" ]; then
        *) ARCH=$( uname -m ) ;;
   esac
 fi
+
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
+
+TMP=${TMP:-/tmp/gfs}
+PKG=$TMP/pkg-$PRGNAM
+OUTPUT=${OUTPUT:-/tmp}
+JOBS=${JOBS:-$(echo -j"$(getconf _NPROCESSORS_ONLN)")}
+
 if [ "$ARCH" = "i486" ]; then
   LIBDIRSUFFIX=""
 elif [ "$ARCH" = "i686" ]; then
@@ -60,9 +70,10 @@ set -e
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $SRCNAM
-tar xfv $CWD/$SRCNAM-$VERSION.tgz
-cd $SRCNAM
+rm -rf $SRCNAM-$VERSION
+tar xfv $CWD/$SRCNAM-$VERSION.tar.?z
+cd $SRCNAM-$VERSION
+cat $CWD/snowball-stemmer-2.2.0-shared-library.patch | patch -p1
 
 chown -R root:root .
 find -L . \
@@ -70,8 +81,6 @@ find -L . \
   -o -perm 511 \) -exec chmod 755 {} \; -o \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
-
-patch -Np0 -i $CWD/libstemmer_c-shared-library.patch
 
 make $JOBS libstemmer.so stemwords || make libstemmer.so stemwords
 
@@ -83,12 +92,12 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a MANIFEST README \
+cp -a COPYING NEWS CONTRIBUTING.rst README.rst AUTHORS \
   $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
 cp $CWD/slack-desc $PKG/install
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
