@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Slackware build script for libmusicbrainz3
+# Slackware build script for libmusicbrainz5
 
 # Copyright 2019- Gregory Tourte <artourter@gmail.com>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
