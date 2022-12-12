@@ -1,0 +1,20 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|' on
+# the right side marks the last column you can put a character in.  You must make
+# exactly 11 lines for the formatting to be correct.  It's also customary to
+# leave one space after the ':'.
+
+         |-----handy-ruler------------------------------------------------------|
+lttng-ust:
+lttng-ust: LTTng User Space Tracing (LTTng-UST)
+lttng-ust:
+lttng-ust: The LTTng User Space Tracing (LTTng-UST) library allows any C/C++
+lttng-ust: application to be instrumented for and traced by LTTng.
+lttng-ust:
+lttng-ust:
+lttng-ust:
+lttng-ust:
+lttng-ust:
+lttng-ust: https://lttng.org/
+lttng-ust:
