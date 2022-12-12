@@ -132,8 +132,8 @@ mkdir -p $PKG/var/lib/gdm/.config/pulse
 cat $CWD/files/default.pa > $PKG/var/lib/gdm/.config/pulse/default.pa
 
 # gdm logo
-install -Dm 644 $CWD/slackware_whitelogo_med.png -t $PKG/usr/share/pixmaps/
-install -Dm644 $CWD/org.gnome.login-screen.gschema.override -t $PKG/usr/share/glib-2.0/schemas || exit 1
+install -Dm 644 $CWD/files/slackware_whitelogo_med.png -t $PKG/usr/share/pixmaps/
+install -Dm644 $CWD/files/org.gnome.login-screen.gschema.override -t $PKG/usr/share/glib-2.0/schemas || exit 1
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a \
