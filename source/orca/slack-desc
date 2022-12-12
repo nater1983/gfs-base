@@ -6,14 +6,14 @@
 # customary to leave one space after the ':' except on otherwise blank lines.
 
     |-----handy-ruler------------------------------------------------------|
-orca: orca ( Screen reader for individuals who are blind impaired )
-orca: 
+orca: orca (Screen reader for individuals who are sight impaired)
 orca:
 orca: Orca is a technology for people with visual impairments.
 orca:
+orca: Homepage: https://wiki.gnome.org/Projects/Orca
 orca:
 orca:
 orca:
 orca:
-orca: https://wiki.gnome.org/Projects/Orca
+orca:
 orca:
