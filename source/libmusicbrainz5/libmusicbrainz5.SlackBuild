@@ -27,7 +27,7 @@ wget -c --no-check-certificate https://github.com/metabrainz/libmusicbrainz/arch
 
 cd $(dirname $0) ; CWD=$(pwd)
 
-PRGNAM=libmusicbrainz3
+PRGNAM=libmusicbrainz5
 SRCNAM=libmusicbrainz
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
@@ -107,23 +107,7 @@ cp -a {AUTHORS,COPYING,INSTALL,NEWS}.txt README.md $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: libmusicbrainz5 (MusicBrainz Client Library v5)
-$PRGNAM:
-$PRGNAM: The MusicBrainz Client Library (libmusicbrainz), also known as
-$PRGNAM: mb_client, is a development library geared towards developers who
-$PRGNAM: wish to add MusicBrainz lookup capabilities to their applications.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: http://musicbrainz.org/doc/libmusicbrainz
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
-
-umask ${UMASKBKP}
-
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
