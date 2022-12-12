@@ -200,8 +200,8 @@ mutter									DONE
 mypy								DONE
 mypy_extensions								DONE
 nautilus								DONE
-netcf
-nspr
+netcf									DONE BROKEN *see note in dir*
+nspr									DONE
 numactl
 oath-toolkit
 openwsman
