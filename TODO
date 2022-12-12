@@ -202,7 +202,7 @@ mypy_extensions								DONE
 nautilus								DONE
 netcf									DONE BROKEN *see note in dir*
 nspr									DONE
-numactl
+numactl									DONE
 oath-toolkit
 openwsman
 orca									DONE
