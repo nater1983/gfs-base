@@ -70,10 +70,10 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=1.13.0
+ VERSION=1.14.0
 fi
 
-MDSCHK=909b9934190f32ffcbc2c5a92efaf9d2
+MDSCHK=17d9567557d35244b4055745c85c5eb8
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
 SRCDOWN=${SRCDOWN:-"https://github.com/hercules-team/augeas/releases/download/release-$VERSION/augeas-$VERSION.tar.gz"}
 
