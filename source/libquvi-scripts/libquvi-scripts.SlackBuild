@@ -7,13 +7,15 @@
 # Modified by Marek Srejma <sam_web@yahoo.de> 2017/05/03
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
 
-#wget -c --no-check-certificate https://downloads.sourceforge.net/quvi/libquvi-scripts-0.9.20131130.tar.xz
 wget -c --no-check-certificate https://sourceforge.net/projects/quvi/files/0.9/libquvi-scripts/libquvi-scripts-0.9.20131130.tar.xz
+
+cd $(dirname $0) ; CWD=$(pwd)
 
 PRGNAM=libquvi-scripts
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -23,7 +25,11 @@ if [ -z "$ARCH" ]; then
   esac
 fi
 
-CWD=$(pwd)
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
+
 TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
@@ -81,11 +87,12 @@ for i in $( find $PKG/usr/man -type l ) ; do
 done
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a AUTHORS COPYING ChangeLog INSTALL NEWS README VERSION \
+          $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
