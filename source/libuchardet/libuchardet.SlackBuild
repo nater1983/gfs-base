@@ -94,6 +94,7 @@ cmake .. \
  -DBUILD_SHARED_LIBS=ON \
  -DBUILD_STATIC=OFF \
  -DCMAKE_BUILD_TYPE=Release
+cd ..
 
 make $JOBS || make
 make install DESTDIR=$PKG
@@ -102,30 +103,17 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 mv $PKG/usr/share/man $PKG/usr/man
+rm -rf $PKG/usr/share
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
-rm -rf $PKG/usr/share
 
-cd ..
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cp -a AUTHORS COPYING INSTALL README.md $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a AUTHORS COPYING INSTALL README.md \
+        $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM-SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM: libuchardet (encoding detector library)
-$PRGNAM:
-$PRGNAM: uchardet uchardet is a C language binding of the original C++
-$PRGNAM: implementation of the universal charset detection library by Mozilla.
-$PRGNAM: uchardet is an encoding detector library, which takes a sequence of
-$PRGNAM: bytes in an unknown character encoding without any additional
-$PRGNAM: information, and attempts to determine the encoding of the text.
-$PRGNAM: Returned encoding names are iconv-compatible.
-$PRGNAM:
-$PRGNAM: Home page: https://www.freedesktop.org/wiki/Software/uchardet/
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
