@@ -48,12 +48,12 @@ OPTDEP=""
 
 if [ -z $VERSION ]
  then
- VERSION=2.0.13
+ VERSION=2.0.16
 fi
 
-MDSCHK=9a9a94bfebf6c9c67defeedc9795e568
+MDSCHK=b05fb656fd6ae31fd34210fad3d0c3c8
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"https://github.com/numactl/numactl/releases/download/v2.0.13/numactl-2.0.13.tar.gz"}
+SRCDOWN=${SRCDOWN:-"https://github.com/numactl/numactl/releases/download/v$VERSION/numactl-$VERSION.tar.gz"}
 
 if [ -z $(find . -maxdepth 1 -name "$PRGNAM-$VERSION.tar.?z*") ]
 then
