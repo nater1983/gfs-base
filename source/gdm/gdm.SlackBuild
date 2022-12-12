@@ -118,7 +118,7 @@ mkdir -p $PKG/etc/pam.d
 cat $CWD/pamd/gdm-autologin > $PKG/etc/pam.d/gdm-autologin
 cat $CWD/pamd/gdm-password > $PKG/etc/pam.d/gdm-password
 cat $CWD/pamd/gdm-launch-environment > $PKG/etc/pam.d/gdm-launch-environment
-cat $CWD/wayland-session > $PKG/etc/gdm/wayland-session
+cat $CWD/files/wayland-session > $PKG/etc/gdm/wayland-session
 
 # Install GDM wrapper script:
 mv $PKG/usr/sbin/{gdm,gdm-bin}
