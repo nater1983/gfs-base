@@ -5,6 +5,7 @@
 # Written by Tim Dickson dickson.tim@googlemail.com
 # Copyright (c) 2018-20 Tim Dickson, Scotland
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Copyright 2022 Nathaniel Russell <naterussell83@gmail.com> Texas, USA.
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -27,12 +28,15 @@
 # note to self. github source tar.gz misses out typeshed directory contents,
 # so use pypi.org/project/mypy download source tar.gz instead.
 
-wget -c --no-check-certificate https://files.pythonhosted.org/packages/78/b1/6079ca9a5afbedb663a0c3db82bd2bcba1574ccdb55acd9b9855ed79dd39/mypy-0.812.tar.gz
+wget -c --no-check-certificate https://files.pythonhosted.org/packages/0e/5c/fbe112ca73d4c6a9e65336f48099c60800514d8949b4129c093a84a28dc8/mypy-0.991.tar.gz
+
+cd $(dirname $0) ; CWD=$(pwd)
 
 PRGNAM=mypy
 VERSION=${VERSION:-$(echo $PRGNAM-*.tar.?z* | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
+PKGTYPE=${PKGTYPE:-txz}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -42,7 +46,11 @@ if [ -z "$ARCH" ]; then
   esac
 fi
 
-CWD=$(pwd)
+if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
+  echo "$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE"
+  exit 0
+fi
+
 TMP=${TMP:-/tmp/gfs}
 PKG=$TMP/package-$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}
@@ -89,4 +97,4 @@ mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
