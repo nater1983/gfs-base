@@ -27,7 +27,7 @@ wget -c --no-check-certificate https://www.einval.com/~steve/software/JTE/downlo
 
 cd $(dirname $0) ; CWD=$(pwd)
 
-PRGNAM=$(basename $0 | cut -f1 -d.)
+PRGNAM=libjte
 SRCNAM=jigit
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$SRCNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
 BUILD=${BUILD:-1}
