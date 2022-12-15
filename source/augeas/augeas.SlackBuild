@@ -134,23 +134,9 @@ cp -a AUTHORS COPYING ChangeLog HACKING.md INSTALL NEWS README \
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: augeas (a configuration API)
-$PRGNAM:
-$PRGNAM: Augeas is a library and command line tool that focuses on the most
-$PRGNAM: basic problem in handling Linux configurations programmatically:
-$PRGNAM: editing actual configuration files in a controlled manner.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: Homepage: http://augeas.net/
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
 
 umask ${UMASKBKP}
-
