@@ -4,6 +4,7 @@
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
 # All rights reserved.
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -22,7 +23,7 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-wget -c --no-check-certificate https://pagure.io/netcf/archive/release-0.2.8/netcf-release-0.2.8.tar.gz
+wget -c --no-check-certificate https://releases.pagure.org/netcf/netcf-0.2.8.tar.gz
 
 PRGNAM=$(basename $0 | cut -f1 -d.)
 VERSION=${VERSION:-$(find . -maxdepth 1 -name "$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f 1 -d - | rev)}
@@ -65,9 +66,9 @@ set -e
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $PRGNAM-release-$VERSION
-tar xfv $CWD/$PRGNAM-release-$VERSION.tar.?z*
-cd $PRGNAM-release-$VERSION
+rm -rf $PRGNAM-$VERSION
+tar xfv $CWD/$PRGNAM-$VERSION.tar.?z*
+cd $PRGNAM-$VERSION
 
 chown -R root:root .
 find -L . \
