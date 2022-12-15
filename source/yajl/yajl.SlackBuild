@@ -8,6 +8,7 @@
 #
 # Copyright (c) 2019, Modified by: Ricardo J. Barberis <ricardo.barberis@gmail.com>
 # Modified by Rafael Tavares <mdrafaeltavares@gmail.com> for gfs (2021)
+# Modified by Frank Honolka <slackernetuk@gmail.com> for gfs (2022)
 #
 # Redistribution and use of this script, with or without modification, is
 # permitted provided that the following conditions are met:
@@ -27,7 +28,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=$(basename $0 | cut -f1 -d.)
-VERSION=${VERSION:-$(find . -maxdepth 1 -name "lloyd-$PRGNAM-*.tar.?z*" | rev | cut -f 3- -d . | cut -f3 -d- | rev)}
+VERSION=${VERSION:-$(find . -maxdepth 1 -name "$VERSION.tar.?z" | rev | cut -f 3- -d . | cut -f3 -d- | rev)}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_gfs}
 
@@ -72,19 +73,19 @@ if [ -z $VERSION ]
  VERSION=2.1.0
 fi
 
-MDSCHK=8df8a92a2799bc949577e8e7a9f43670
+MDSCHK=6887e0ed7479d2549761a4d284d3ecb0
 DWNLCMD=${DWNLCMD:-"wget -c --no-check-certificate"}
-SRCDOWN=${SRCDOWN:-"http://github.com/lloyd/yajl/tarball/2.1.0/lloyd-yajl-$VERSION-0-ga0ecdde.tar.gz"}
+SRCDOWN=${SRCDOWN:-"https://github.com/lloyd/yajl/archive/refs/tags/$VERSION.tar.gz"}
 
-if [ -z $(find . -maxdepth 1 -name "lloyd-$PRGNAM-$VERSION-0-ga0ecdde.tar.?z*") ]
+if [ -z $(find . -maxdepth 1 -name "$VERSION.tar.?z*") ]
 then
  $DWNLCMD $SRCDOWN
 else
- if md5sum -c <<<"$MDSCHK $(echo lloyd-$PRGNAM-$VERSION-0-ga0ecdde.tar.?z*)";
+ if md5sum -c <<<"$MDSCHK $(echo $VERSION.tar.?z*)";
   then
    continue
   else
-   rm -rf lloyd-$PRGNAM-$VERSION-0-ga0ecdde.tar.?z*
+   rm -rf $VERSION.tar.?z*
    $DWNLCMD $SRCDOWN
  fi
 fi
@@ -92,9 +93,9 @@ fi
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf lloyd-$PRGNAM-66cb08c
-tar xvf $CWD/lloyd-$PRGNAM-$VERSION-0-ga0ecdde.tar.gz
-cd lloyd-$PRGNAM-66cb08c
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$VERSION.tar.gz
+cd $PRGNAM-$VERSION
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -124,20 +125,7 @@ cp -a BUILDING COPYING ChangeLog README TODO $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: yajl (Yet Another JSON Library)
-$PRGNAM:
-$PRGNAM: YAJL is a small event-driven (SAX-style) JSON parser written in
-$PRGNAM: ANSI C, and a small validating JSON generator. YAJL is released under
-$PRGNAM: the ISC license.
-$PRGNAM:
-$PRGNAM:
-$PRGNAM:
-$PRGNAM: http://lloyd.github.com/yajl/
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
 /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
