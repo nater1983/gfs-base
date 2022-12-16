@@ -287,6 +287,7 @@ webkit2gtk								DONE
 webkit2gtk4.1								DONE
 wheel
 wpebackend-fdo								DONE
+waf									ADDED required for newer wxPython
 wxPython
 xdg-dbus-proxy								Current already has it
 xdg-desktop-portal							Current already has it
