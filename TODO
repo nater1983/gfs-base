@@ -205,13 +205,13 @@ netcf									DONE
 nspr									DONE
 numactl									DONE
 oath-toolkit								DONE
-openwsman
+openwsman									DONE
 orca									DONE
 ostree
 p7zip									DONE
-pathlib2
-perl-Text-CSV
-phodav
+pathlib2									DONE
+perl-Text-CSV									DONE
+phodav									DONE
 pluggy
 plymouth
 protobuf
