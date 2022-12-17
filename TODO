@@ -167,6 +167,7 @@ libmediaart								DONE
 libmusicbrainz5								DONE
 liboauth								DONE
 libosinfo								DONE
+libostree								DONE
 libovf-glib								DONE
 libpeas									DONE
 libphonenumber							dep on gtest and protobuf. protobuf fails, might need re-write, I'll come back to it. Does anyone know what these are deps for? gnome-contacts?
@@ -205,13 +206,12 @@ netcf									DONE
 nspr									DONE
 numactl									DONE
 oath-toolkit								DONE
-openwsman
+openwsman									DONE
 orca									DONE
-ostree
 p7zip									DONE
-pathlib2
-perl-Text-CSV
-phodav
+pathlib2									DONE
+perl-Text-CSV									DONE
+phodav									DONE
 pluggy
 plymouth
 protobuf
