@@ -3,6 +3,7 @@
 # Slackware build script for pyatspi
 
 # Copyright 2021 Rafael Tavares (mdrafaeltavares@gmail.com) Bahia, Brazil.
+# Copyright 2022 Nathaniel Russell <naterussell83@gmail.com> 
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -105,26 +106,10 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | gr
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a AUTHORS COPYING* INSTALL NEWS README \
   $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$(basename $0) > $PKG/usr/doc/$PRGNAM-$VERSION/$(basename $0)
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
-#      |-----handy-ruler------------------------------------------------------|
-cat <<EOT >$PKG/install/slack-desc
-$PRGNAM:
-$PRGNAM: pyatspi
-$PRGNAM:
-$PRGNAM: Wraps the Gnome Assistive Technology Service Provider Interface for
-$PRGNAM: use in Python. Imports the bonobo and ORBit modules. Initializes the
-$PRGNAM: ORBit ORB. Activates the bonobo Accessibility Registry. Loads the
-$PRGNAM: Accessibility typelib and imports the classes implementing the AT-SPI
-$PRGNAM: interfaces.
-$PRGNAM:
-$PRGNAM: https://gitlab.gnome.org/GNOME/pyatspi2
-$PRGNAM:
-EOT
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
-
-umask ${UMASKBKP}
-
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
