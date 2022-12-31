@@ -136,15 +136,12 @@ sed -i \
   -e "s|^\#listen_tls|listen_tls|" \
   $PKG/etc/libvirt/libvirtd.conf
 
-# still, we use $VIRTGROUP as our virtualization group
-sed -i \
-  -e "s|^\#group\ =\ \"root\"|group = \"$VIRTGROUP\"|" \
-  $PKG/etc/libvirt/qemu.conf
-
 # disable seccomp support or else VMs won't start with new libvirt/qemu combo
 # 20220212 bkw: this file doesn't exist if qemu wasn't installed. and
 # since qemu isn't in REQUIRES, it's optional, so the build shouldn't fail.
 if [ -e $PKG/etc/libvirt/qemu.conf ]; then
+  sed -i -e "s|^\#group\ =\ \"root\"|group = \"$VIRTGROUP\"|" \
+  $PKG/etc/libvirt/qemu.conf
   sed -i  "s|^\#seccomp_sandbox = 1|seccomp_sandbox = 0|" \
     $PKG/etc/libvirt/qemu.conf
 fi
